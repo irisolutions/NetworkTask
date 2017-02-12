@@ -1,12 +1,8 @@
 package com.example.khalk.network2;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -106,9 +100,10 @@ public class MainActivity extends AppCompatActivity {
         String finalUrl = BaseUrl + ":" + port + controller + method + "/" + para1;
 //        String finalUrl="http://192.168.1.4:8888/SensoryBoxAPK/AudioVolume/0.8";
         Log.d(TAG, finalUrl);
-
-
-        new UrlTesting(expectedCode,textViewResultsID).execute(finalUrl);
+        ResultData expectedResultData=new ResultData();
+        expectedResultData.setCode(Integer.parseInt(expectedCode));
+        Log.d(TAG, "TestUrl: INteget.parseInt("+expectedResultData.getCode()+")");
+        new UrlTesting(expectedResultData,textViewResultsID).execute(finalUrl);
     }
 
 
@@ -116,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public class UrlTesting extends AsyncTask<String, Void, String> implements DialogInterface.OnCancelListener {
-        private String aaa = null;
+    public class UrlTesting extends AsyncTask<Object, Object, ResultData> implements DialogInterface.OnCancelListener {
+        private ResultData aaa = null;
         private Dialog dialog = null;
         private TextView resutlTextView;
         private TextView pingView;
@@ -127,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        UrlTesting(String code,int TextViewID) {
+        UrlTesting(ResultData code, int TextViewID) {
             this.aaa = code;
             resutlTextView=(TextView)findViewById(TextViewID);
             in=null;
@@ -149,28 +144,61 @@ public class MainActivity extends AppCompatActivity {
 
 
         @Override
-        protected String doInBackground(String... params) {
-            String UrlTestingUrl = params[0];
-            String githubUrlTestingResults = null;
+        protected ResultData doInBackground(Object... params) {
+            //Object UrlTestingUrl = params[0];
+
+            String UrlTestingUrl= (String) params[0];
+            ResultData data = new ResultData();
+           // data=null;
+            NetworkTestResult preFailSocketUnreachable = NetworkTestResult.PRE_FAIL_SOCKET_UNREACHABLE;
+            dialog.dismiss();
+
+
+
+            /**
+             * check if ip address is rechable
+             */
             try {
 //                this.in =InetAddress.getByName("http://192.168.1.4");
-                in=InetAddress.getByName("192.168.1.4");
+                in = InetAddress.getByName("192.168.1.4");
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-                githubUrlTestingResults="existException"+e.getStackTrace().toString();
+                data.setStatus("prefail");
+                data.setException(e);
+                return data;
             }
 
             try {
-                if(in.isReachable(10000)){
+                if (in.isReachable(10000)) {
                     Log.d(TAG, "doInBackground: ip address reachable");
                 }
             } catch (IOException e) {
                 Log.d(TAG, "doInBackground: ip address unreachable");
-                githubUrlTestingResults="existException"+e.getStackTrace().toString();
                 e.printStackTrace();
+                data.setStatus("prefail");
+                data.setException(e);
+                return data;
+            }
+            /**
+             * check if socket rechable
+             */
+            try (Socket ss = new Socket()) {
+                InetSocketAddress sa = new InetSocketAddress("192.168.1.4", 8888);
+
+                ss.connect(sa, 1000);           // --> change from 1 to 500 (for example)
+                // ss.close();
+                Log.d(TAG, "doInBackground: socket is rechable");
+
+            } catch (Exception e) {
+                Log.d(TAG, "doInBackground: socket is unreachable");
+                data.setStatus("prefail");
+                data.setException(e);
+                return data;
+//                preFailSocketUnreachable = NetworkTestResult.PRE_FAIL_SOCKET_UNREACHABLE;
             }
 
-            dialog.dismiss();
+
+            ResultData resultData = new ResultData();
 
             try {
                 Request request = new Request.Builder()
@@ -179,36 +207,41 @@ public class MainActivity extends AppCompatActivity {
 
 // ensure the response (and underlying response body) is closed
                 try (Response response = client.newCall(request).execute()) {
-                    githubUrlTestingResults = String.valueOf(response.code());
-                    Log.d(TAG, "doInBackground: " + githubUrlTestingResults);
+//                    data = String.valueOf(response.code());
+                    data.setCode(response.code());
+                    resultData.setCode(response.code());
+                    testResponce(data, this.aaa);
+
+                    Log.d(TAG, "doInBackground: " + data);
+                    return data;
                 }
 
             } catch (IOException e) {
                 // TODO: 2/12/2017 handle 3 status: pass. fail. prepare_fail
-                githubUrlTestingResults="existException"+e.getStackTrace().toString();
-                e.printStackTrace();
+                data.setStatus("prefail");
+                data.setException(e);
+                return data;
             }
 
-            return githubUrlTestingResults;
         }
 
         // COMPLETED (3) Override onPostExecute to display the results in the TextView
         @Override
-        protected void onPostExecute(String githubUrlTestingResults) {
+        protected void onPostExecute(ResultData resultData) {
             loadingIndicator.setVisibility(View.INVISIBLE);
-            if (githubUrlTestingResults != null && !githubUrlTestingResults.equals("")) {
-                if(githubUrlTestingResults.startsWith("existException")){
-                    resutlTextView.setText("prepare_fail");
+            if (resultData != null && !resultData.equals("")) {
+                if(resultData.exception != null){
+                    resutlTextView.setText("pre_fail");
                 } else {
-                    System.out.print(githubUrlTestingResults);
-                    testResponce(githubUrlTestingResults, this.aaa);
+                    System.out.print(resultData);
+//                    testResponce(resultData, this.aaa);
                 }
 
 
             }
         }
 
-        public void testResponce(String responceCode, String expectedCode) {
+        public void testResponce(ResultData responceCode, ResultData expectedCode) {
             if (responceCode.equals(expectedCode)) {
                 Log.d(TAG, "onPostExecute: right");
                 resutlTextView.setText("pass");
@@ -225,6 +258,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private class ResultData {
+        private int code;
+        private Exception exception;
+        private String status;
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setException(Exception exception) {
+            this.exception = exception;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+    }
 }
 
 
