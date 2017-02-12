@@ -4,24 +4,90 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.example.khalk.network2.MainActivity">
 
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="enter para1"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/audioVolume_0.8_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="8dp"
+            android:text="@string/audio_08" />
+
+        <Button
+            android:id="@+id/audioVolume_0.8_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="send" />
+
+        <TextView
+            android:id="@+id/audioVolume_0.8_textResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/send_request"
-        android:padding="16dp"
-        android:text="send"
-        />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/lang_en_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="8dp"
+            android:text="@string/lang_en" />
+
+        <Button
+            android:id="@+id/lang_en_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="send" />
+
+        <TextView
+            android:id="@+id/lang_en_textResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/lang_ar_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="8dp"
+            android:text="@string/lang_ar" />
+
+        <Button
+            android:id="@+id/lang_ar_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="send" />
+
+        <TextView
+            android:id="@+id/lang_ar_textResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
 </LinearLayout>
