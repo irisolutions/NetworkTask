@@ -1,69 +1,92 @@
 package com.example.khalk.network2;
 
 import android.os.AsyncTask;
-import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.URL;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.R.attr.button;
-import static android.R.attr.port;
-//add comment
+
 public class MainActivity extends AppCompatActivity {
     OkHttpClient client;
-
     private static final String TAG = MainActivity.class.getName();
-    //final static String BASE_URL ="http://192.168.0.107:8888/SensoryBoxAPK/AudioVolume/0.8";
-//    final static String BaseUrl = "http://192.168.0.107";
-    final static String BaseUrl = "http://192.168.16.100";
+    //final static String BASE_URL ="http://192.168.1.4:8888/SensoryBoxAPK/AudioVolume/0.8";
+    final static String BaseUrl = "http://192.168.1.4";
     final static String sensoryBox = "/SensoryBoxAPK/";
-
+    Button AudioVolume_08_Button;
+    TextView AudioVolume_08_ResultTextView;
+    Button Languge_en_Button;
+    TextView Languge_en_ResultTextView;
+    Button Languge_ar_Button;
+    TextView Languge_ar_ResultTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AudioVolume_08_Button=(Button)findViewById(R.id.audioVolume_0_8_Button);
+        AudioVolume_08_ResultTextView=(TextView)findViewById(R.id.audioVolume_0_8_textResult);
+        Languge_en_Button=(Button)findViewById(R.id.lang_en_Button);
+        Languge_en_ResultTextView=(TextView)findViewById(R.id.lang_en_textResult);
+        Languge_ar_Button=(Button)findViewById(R.id.lang_ar_Button);
+        Languge_ar_ResultTextView=(TextView)findViewById(R.id.lang_ar_textResult);
         client = new OkHttpClient();
-        SendUrl("80", sensoryBox, "AudioVolume", "1.1");
-//        SendUrl("8888", sensoryBox, "AudioVolume", "0.7");
-//        SendUrl("8888", sensoryBox, "AudioVolume", "0.6");
-//        SendUrl("8888", sensoryBox, "ChangeLanguage", "en\\aaa");
+
+        AudioVolume_08_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TestUrl("8888", sensoryBox, "AudioVolume", "0.8","200",AudioVolume_08_ResultTextView.getId());
+            }
+        });
+
+        Languge_en_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 2/12/2017 prevent multiple button press , make it after post execute-after request-
+                TestUrl("8888", sensoryBox, "ChangeLanguage", "en","200",Languge_en_ResultTextView.getId());
+            }
+        });
+
+        Languge_ar_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TestUrl("8888", sensoryBox, "ChangeLanguage", "ar","200",Languge_ar_ResultTextView.getId());
+            }
+        });
 
     }
 
-    private void SendUrl(String port, String sensoryBox, String para1, String para2) {
-//        String finalUrl = BaseUrl + ":" + port + sensoryBox + para1 + "/" + para2;
-        String finalUrl="http://192.168.16.101:8080/aaaaa/bbbbb/index.html";
+    private void TestUrl(String port, String controller, String method, String para1,String expectedCode, int textViewResultsID) {
+        String finalUrl = BaseUrl + ":" + port + controller + method + "/" + para1;
+//        String finalUrl="http://192.168.1.4:8888/SensoryBoxAPK/AudioVolume/0.8";
         Log.d(TAG, finalUrl);
 
 
-        new UrlTesting("200").execute(finalUrl);
+        new UrlTesting(expectedCode,textViewResultsID).execute(finalUrl);
     }
 
 
+
+
+
+
     public class UrlTesting extends AsyncTask<String, Void, String> {
-        public String aaa = null;
+        private String aaa = null;
 
-        UrlTesting(String code) {
+        private TextView resutlTextView;
+
+        UrlTesting(String code,int TextViewID) {
             this.aaa = code;
-        }
-
-        String run(String url) throws IOException {
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
-            Response response = client.newCall(request).execute();
-            return String.valueOf(response.code());
+            resutlTextView=(TextView)findViewById(TextViewID);
         }
 
         @Override
@@ -72,9 +95,14 @@ public class MainActivity extends AppCompatActivity {
             String githubUrlTestingResults = null;
 
             try {
-                githubUrlTestingResults = run(UrlTestingUrl);
+                Request request = new Request.Builder()
+                        .url(UrlTestingUrl)
+                        .build();
+                Response response = client.newCall(request).execute();
+                githubUrlTestingResults = String.valueOf(response.code());
                 Log.d(TAG, "doInBackground: " + githubUrlTestingResults);
             } catch (IOException e) {
+                // TODO: 2/12/2017 handle 3 status: pass. fail. prepare_fail
                 e.printStackTrace();
             }
 
@@ -94,8 +122,10 @@ public class MainActivity extends AppCompatActivity {
         public void testResponce(String responceCode, String expectedCode) {
             if (responceCode.equals(expectedCode)) {
                 Log.d(TAG, "onPostExecute: right");
+                resutlTextView.setText("OK");
             } else {
                 Log.d(TAG, "onPostExecute: false");
+                resutlTextView.setText("ERROR");
             }
 //            this.aaa = responceCode;
         }
