@@ -1,7 +1,10 @@
 package com.example.khalk.network2;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +16,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     TextView langugeArResultTextView;
     Button resetButton;
     Button testAllButton;
+    public TextView pingTest;
     private ProgressBar loadingIndicator;
 
 
@@ -51,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         resetButton=(Button)findViewById(R.id.resetButton);
         testAllButton=(Button)findViewById(R.id.testAllButton);
         loadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
-
+        pingTest=(TextView)findViewById(R.id.pingText);
+        final InetAddress[] inAddress = new InetAddress[1];
         client = new OkHttpClient();
 
         audioVolume08Button.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TestUrl("8888", sensoryBox, "AudioVolume", "0.8","200", audioVolume08ResultTextView.getId());
                 Log.d(TAG, "onClick: ");
-                
+
+
             }
         });
 
@@ -87,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void TestUrl(String port, String controller, String method, String para1,String expectedCode, int textViewResultsID) {
@@ -107,10 +120,18 @@ public class MainActivity extends AppCompatActivity {
         private String aaa = null;
         private Dialog dialog = null;
         private TextView resutlTextView;
+        private TextView pingView;
+        String pingResult="";
+        Socket s;
+        InetAddress in;
+
+
 
         UrlTesting(String code,int TextViewID) {
             this.aaa = code;
             resutlTextView=(TextView)findViewById(TextViewID);
+            in=null;
+
         }
 
         @Override
@@ -118,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             // To disable the whole screen --> setCancelable(false);
             dialog = new Dialog(MainActivity.this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 //            dialog = new Dialog(MainActivity.this, android.R.style.Theme_Black);
+            pingView=(TextView)findViewById(R.id.pingText);
             dialog.setCancelable(false);
             loadingIndicator.setVisibility(View.VISIBLE);
             dialog.show();
@@ -125,32 +147,50 @@ public class MainActivity extends AppCompatActivity {
            // super.onPreExecute();
         }
 
+
         @Override
         protected String doInBackground(String... params) {
             String UrlTestingUrl = params[0];
             String githubUrlTestingResults = null;
+            try {
+//                this.in =InetAddress.getByName("http://192.168.1.4");
+                in=InetAddress.getByName("192.168.1.4");
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                githubUrlTestingResults="existException"+e.getStackTrace().toString();
+            }
+
+            try {
+                if(in.isReachable(10000)){
+                    Log.d(TAG, "doInBackground: ip address reachable");
+                }
+            } catch (IOException e) {
+                Log.d(TAG, "doInBackground: ip address unreachable");
+                githubUrlTestingResults="existException"+e.getStackTrace().toString();
+                e.printStackTrace();
+            }
 
             dialog.dismiss();
-
 
             try {
                 Request request = new Request.Builder()
                         .url(UrlTestingUrl)
                         .build();
-                Response response = client.newCall(request).execute();
-                githubUrlTestingResults = String.valueOf(response.code());
-                Log.d(TAG, "doInBackground: " + githubUrlTestingResults);
+
+// ensure the response (and underlying response body) is closed
+                try (Response response = client.newCall(request).execute()) {
+                    githubUrlTestingResults = String.valueOf(response.code());
+                    Log.d(TAG, "doInBackground: " + githubUrlTestingResults);
+                }
+
             } catch (IOException e) {
                 // TODO: 2/12/2017 handle 3 status: pass. fail. prepare_fail
                 githubUrlTestingResults="existException"+e.getStackTrace().toString();
                 e.printStackTrace();
             }
 
-
             return githubUrlTestingResults;
         }
-
-
 
         // COMPLETED (3) Override onPostExecute to display the results in the TextView
         @Override
@@ -176,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onPostExecute: false");
                 resutlTextView.setText("fail");
             }
-//            this.aaa = responceCode;
         }
 
         @Override
@@ -184,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
             cancel(true);
         }
     }
+
 
 }
 
