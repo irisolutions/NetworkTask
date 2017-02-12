@@ -88,6 +88,28 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reset"/>
+        <Button
+            android:id="@+id/testAllButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/testAll"
+            />
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            android:layout_height="84dp"
+            android:layout_width="84dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+    </LinearLayout>
 
 
 </LinearLayout>

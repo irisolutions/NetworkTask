@@ -3,5 +3,8 @@
     <string name="audio_08">SensoryBoxAPK/AudioVolume/0.8</string>
     <string name="lang_en">SensoryBoxAPK/ChangeLanguage/en</string>
     <string name="lang_ar">SensoryBoxAPK/ChangeLanguage/ar</string>
+    <string name="reset">Reset</string>
+    <string name="testAll">TestAll</string>
+
 
 </resources>
