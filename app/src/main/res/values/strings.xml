@@ -1,11 +1,16 @@
 <resources>
-    <string name="app_name">Network2</string>
+    <string name="app_name">Network Testing</string>
+    <string name="networkActivity">Items</string>
     <string name="audio_08">SensoryBoxAPK/AudioVolume/0.8</string>
     <string name="lang_en">SensoryBoxAPK/ChangeLanguage/en</string>
     <string name="lang_ar">SensoryBoxAPK/ChangeLanguage/ar</string>
     <string name="reset">Reset</string>
     <string name="testAll">TestAll</string>
     <string name="test">Test</string>
+    <string name="listview">List View</string>
+    <string name="enterUrl">Enter URL</string>
+    <string name="enterPort">Enter Port</string>
+    <string name="start">Start</string>
 
 
 </resources>

@@ -56,6 +56,15 @@ public class TestCase {
         finalUrl=baseUrl + ":" + port + "/" + testName;
         client = new OkHttpClient();
     }
+    TestCase(String caseName, String expectedCode,String url,String port) {
+        this.testName = caseName;
+        this.expectedCode = expectedCode;
+        this.port = port;
+        solidUrl = url;
+        baseUrl = "http://"+solidUrl;
+        finalUrl=baseUrl + ":" + port + "/" + testName;
+        client = new OkHttpClient();
+    }
 
 
     public void setTestName(String testName) {
