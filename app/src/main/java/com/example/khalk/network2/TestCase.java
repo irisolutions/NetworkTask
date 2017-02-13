@@ -43,26 +43,27 @@ public class TestCase {
         port = "8888";
         baseUrl = "http://192.168.1.2";
         solidUrl = "192.168.1.2";
-        finalUrl=baseUrl + ":" + port + "/" + testName;
+        finalUrl = baseUrl + ":" + port + "/" + testName;
         client = new OkHttpClient();
     }
 
-    TestCase(String caseName, String expectedCode,String url) {
+    TestCase(String caseName, String expectedCode, String url) {
         this.testName = caseName;
         this.expectedCode = expectedCode;
         port = "8888";
         solidUrl = url;
-        baseUrl = "http://"+solidUrl;
-        finalUrl=baseUrl + ":" + port + "/" + testName;
+        baseUrl = "http://" + solidUrl;
+        finalUrl = baseUrl + ":" + port + "/" + testName;
         client = new OkHttpClient();
     }
-    TestCase(String caseName, String expectedCode,String url,String port) {
+
+    TestCase(String caseName, String expectedCode, String url, String port) {
         this.testName = caseName;
         this.expectedCode = expectedCode;
         this.port = port;
         solidUrl = url;
-        baseUrl = "http://"+solidUrl;
-        finalUrl=baseUrl + ":" + port + "/" + testName;
+        baseUrl = "http://" + solidUrl;
+        finalUrl = baseUrl + ":" + port + "/" + testName;
         client = new OkHttpClient();
     }
 

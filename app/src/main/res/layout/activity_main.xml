@@ -27,7 +27,7 @@
             android:id="@+id/eneteredUrl"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="192.168.1.2"/>
+            android:text="192.168.1.2" />
 
     </LinearLayout>
 
@@ -47,15 +47,15 @@
             android:id="@+id/eneteredPort"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="8888"/>
+            android:text="8888" />
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/startButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start"
-        android:id="@+id/startButton"/>
+        android:text="@string/start" />
 
 
 </LinearLayout>

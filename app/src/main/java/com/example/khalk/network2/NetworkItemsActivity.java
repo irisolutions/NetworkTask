@@ -31,16 +31,16 @@ public class NetworkItemsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         Log.d(TAG, "onCreate: we are inetAddress onCreate method");
 
         // Create a list of testcases
         testCases = new ArrayList<TestCase>();
-        url=intent.getStringExtra("url");
-        port=intent.getStringExtra("port");
-        testCases.add(new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200",url,port));
-        testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/en", "200",url,port));
-        testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/ar", "200",url,port));
+        url = intent.getStringExtra("url");
+        port = intent.getStringExtra("port");
+        testCases.add(new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", url, port));
+        testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/en", "200", url, port));
+        testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/ar", "200", url, port));
 
 
         // Create an {@link CaseAdapter}, whose data source is a list of {@link Word}socket. The
@@ -56,6 +56,7 @@ public class NetworkItemsActivity extends AppCompatActivity {
         // {@link ListView} will display list items for each {@link Word} inetAddress the list.
         listView.setAdapter(caseAdapter);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
@@ -76,13 +77,13 @@ public class NetworkItemsActivity extends AppCompatActivity {
             int itemsCount = listView.getChildCount();
             for (int i = 0; i < itemsCount; i++) {
                 View view = listView.getChildAt(i);
-                TextView txt =(TextView)view.findViewById(R.id.test_result);
+                TextView txt = (TextView) view.findViewById(R.id.test_result);
                 txt.setText("");
             }
             return true;
         }
         if (id == R.id.menu_testAll_item) {
-            for(int i=0;i<testCases.size();i++){
+            for (int i = 0; i < testCases.size(); i++) {
                 caseAdapter.run(testCases.get(i));
             }
             return true;
@@ -90,7 +91,6 @@ public class NetworkItemsActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

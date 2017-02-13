@@ -15,15 +15,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
+
 import okhttp3.OkHttpClient;
 
 
 public class MainActivity extends AppCompatActivity {
     EditText urlEditText;
     EditText portEditText;
-    String url="192.168.1.2";
-    String port="8888";
+    String url = "192.168.1.2";
+    String port = "8888";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,32 +33,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Button startButton = (Button)findViewById(R.id.startButton);
-         urlEditText=(EditText)findViewById(R.id.eneteredUrl);
-         portEditText=(EditText)findViewById(R.id.eneteredPort);
+        Button startButton = (Button) findViewById(R.id.startButton);
+        urlEditText = (EditText) findViewById(R.id.eneteredUrl);
+        portEditText = (EditText) findViewById(R.id.eneteredPort);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String enteredUrl=urlEditText.getText().toString();
-                String enteredPort=portEditText.getText().toString();
-                if(enteredUrl !=null && enteredUrl != " "){
-                    url=enteredUrl;
+                String enteredUrl = urlEditText.getText().toString();
+                String enteredPort = portEditText.getText().toString();
+                if (enteredUrl != null && enteredUrl != " ") {
+                    url = enteredUrl;
                 }
-                if(enteredPort !=null && enteredPort!=" " ){
-                    port=enteredPort;
+                if (enteredPort != null && enteredPort != " ") {
+                    port = enteredPort;
                 }
                 Intent NetworkTestItems = new Intent(MainActivity.this, NetworkItemsActivity.class);
-                NetworkTestItems.putExtra("url",url);
-                NetworkTestItems.putExtra("port",port);
+                NetworkTestItems.putExtra("url", url);
+                NetworkTestItems.putExtra("port", port);
                 startActivity(NetworkTestItems);
             }
         });
 
     }
-
-
-
 
 
 }
