@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
+//        setContentView(R.layout.list);
         Log.d(TAG, "onCreate: we are inetAddress onCreate method");
 
         // Create a list of testcases
@@ -76,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.menu_testAll_item) {
-
-
-
+           for(int i=0;i<testCases.size();i++){
+               caseAdapter.run(testCases.get(i));
+           }
             return true;
         }
 
