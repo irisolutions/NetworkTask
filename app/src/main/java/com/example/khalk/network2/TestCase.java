@@ -85,6 +85,10 @@ public class TestCase {
     public void setResultTextView(TextView viewResult){
         this.resultTextView=viewResult;
     }
+    public TextView getResultTextView(){
+        return resultTextView;
+    }
+
 
     /**
      * this is class to test case
@@ -103,11 +107,13 @@ public class TestCase {
     public class UrlTesting extends AsyncTask<Object, Object, ResultData> implements DialogInterface.OnCancelListener {
         private ResultData aaa = null;
         private Dialog dialog = null;
-        private TextView resutlTextView;
+        //private TextView resutlTextView;
         private TextView pingView;
         String pingResult="";
         Socket socket;
         InetAddress in;
+
+
 
 
 
@@ -230,18 +236,19 @@ public class TestCase {
 
 
             }
-//            resutlTextView.setText(getTestResult());
+            getResultTextView().setText(getTestResult());
+//            this.resutlTextView.setText("aaaa");
         }
 
         public void testResponce(ResultData responceCode, ResultData expectedCode) {
             if (responceCode.equals(expectedCode)) {
                 Log.d(TAG, "onPostExecute: right");
                 setTestResult("pass");
-//                resutlTextView.setText(getTestResult());
+                getResultTextView().setText(getTestResult());
             } else {
                 Log.d(TAG, "onPostExecute: false");
                 setTestResult("fail");
-//                resutlTextView.setText(getTestResult());
+                getResultTextView().setText(getTestResult());
 
             }
 
