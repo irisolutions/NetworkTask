@@ -26,7 +26,7 @@ public class TestCase {
     private String testName;
     private String expectedCode;
     private String testResult;
-    public  String finalUrl;
+
     public String solidUrl;
     public String baseUrl;
     public String port;
@@ -34,20 +34,28 @@ public class TestCase {
     public TextView resultTextView;
     public View parent;
     public OkHttpClient client;
+    public String finalUrl;
 
 
-
-
-    TestCase(String caseName,String expectedCode){
-        this.testName=caseName;
-        this.expectedCode=expectedCode;
-        port="8888";
-        baseUrl="http://192.168.1.2";
-        solidUrl="192.168.1.2";
-        finalUrl=baseUrl+":"+port+testName;
+    TestCase(String caseName, String expectedCode) {
+        this.testName = caseName;
+        this.expectedCode = expectedCode;
+        port = "8888";
+        baseUrl = "http://192.168.1.2";
+        solidUrl = "192.168.1.2";
+        finalUrl=baseUrl + ":" + port + "/" + testName;
         client = new OkHttpClient();
     }
 
+    TestCase(String caseName, String expectedCode,String url) {
+        this.testName = caseName;
+        this.expectedCode = expectedCode;
+        port = "8888";
+        solidUrl = url;
+        baseUrl = "http://"+solidUrl;
+        finalUrl=baseUrl + ":" + port + "/" + testName;
+        client = new OkHttpClient();
+    }
 
 
     public void setTestName(String testName) {
@@ -70,24 +78,28 @@ public class TestCase {
     }
 
 
-    public String getTestResult(){
+    public String getTestResult() {
         return this.testResult;
     }
-    public void setTestResult(String result){
-        this.testResult=result;
+
+    public void setTestResult(String result) {
+        this.testResult = result;
     }
 
-    public void setLoadingIndicator(ProgressBar loading){
-        this.loadingIndicator=loading;
+    public void setLoadingIndicator(ProgressBar loading) {
+        this.loadingIndicator = loading;
     }
-    public void setResultTextView(TextView viewResult){
-        this.resultTextView=viewResult;
+
+    public void setResultTextView(TextView viewResult) {
+        this.resultTextView = viewResult;
     }
-    public TextView getResultTextView(){
+
+    public TextView getResultTextView() {
         return resultTextView;
     }
-    public void setParent(View view){
-        this.parent=view;
+
+    public void setParent(View view) {
+        this.parent = view;
     }
 
 }

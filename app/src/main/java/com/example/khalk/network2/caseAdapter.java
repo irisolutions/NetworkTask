@@ -1,6 +1,5 @@
 package com.example.khalk.network2;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -12,13 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import okhttp3.OkHttpClient;
+
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -31,9 +31,7 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
     private static final String TAG = CaseAdapter.class.getName();
     private ProgressBar loadingIndicator;
     private TextView resultTestTextView;
-    private Boolean Testing=false;
-//    TestCase testCase;
-
+    private Boolean Testing = false;
 
     public CaseAdapter(Context context, ArrayList<TestCase> testCases) {
         super(context, 0, testCases);
@@ -42,106 +40,70 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View listItemView =convertView;
+        View listItemView = convertView;
 
-        if(listItemView==null){
-            listItemView=LayoutInflater.from(getContext()).inflate(
-                    R.layout.list_item,parent,false);
+        if (listItemView == null) {
+            listItemView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.list_item, parent, false);
         }
-
-        final TestCase testCase=getItem(position);
-
-        TextView nameTestTextView=(TextView)listItemView.findViewById(R.id.case_name);
+        final TestCase testCase = getItem(position);
+        TextView nameTestTextView = (TextView) listItemView.findViewById(R.id.case_name);
         nameTestTextView.setText(testCase.getTestName());
-//        testCase.setParentView(listItemView);
 
         loadingIndicator = (ProgressBar) listItemView.findViewById(R.id.loading_indicator);
         testCase.setLoadingIndicator(loadingIndicator);
-        Button testButton=(Button)listItemView.findViewById(R.id.test_button);
-        resultTestTextView=(TextView)listItemView.findViewById(R.id.test_result);
-        testCase.setResultTextView(resultTestTextView);
-        //testCase.setParent(parent);
 
+        Button testButton = (Button) listItemView.findViewById(R.id.test_button);
+        resultTestTextView = (TextView) listItemView.findViewById(R.id.test_result);
+        testCase.setResultTextView(resultTestTextView);
 
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Testing){
+                if (!Testing) {
                     run(testCase);
                 }
-
-//                testCase.run();
             }
         });
 
-
-        return  listItemView;
-
+        return listItemView;
     }
-    public void run(TestCase test){
-        String finalUrl = test.baseUrl + ":" + test.port + "/"+test.getTestName();
-//        String finalUrl="http://192.168.1.4:8888/SensoryBoxAPK/AudioVolume/0.8";
-        ResultData expectedResultData=new ResultData();
+
+    public void run(TestCase test) {
+        ResultData expectedResultData = new ResultData();
         expectedResultData.setCode(Integer.parseInt(test.getExpectedCode()));
-        Log.d(TAG, "run: expected code from class TestCase is "+test.getExpectedCode());
-//        Log.d(TAG, "TestUrl: INteget.parseInt("+expectedResultData.getCode()+")");
-        new UrlTesting(expectedResultData,test).execute(finalUrl);
+        Log.d(TAG, "run: the final url "+test.finalUrl);
+        new UrlTesting(expectedResultData, test).execute(test.finalUrl);
     }
 
 
     public class UrlTesting extends AsyncTask<Object, Object, ResultData> implements DialogInterface.OnCancelListener {
-        private ResultData aaa = null;
-        private Dialog dialog = null;
-        private TextView resutlTextView;
-        private TextView pingView;
-        String pingResult="";
-        Socket socket;
-        InetAddress in;
+        private ResultData resultData = null;
+        InetAddress inetAddress;
         TestCase testCase;
 
-
-
-        UrlTesting(ResultData code,TestCase test) {
-            this.aaa = code;
-            in=null;
-            this.testCase=test;
+        UrlTesting(ResultData code, TestCase test) {
+            this.resultData = code;
+            inetAddress = null;
+            this.testCase = test;
         }
 
         @Override
         protected void onPreExecute() {
-            // To disable the whole screen --> setCancelable(false);
-//            setTesting(true);
-
-//            dialog = new Dialog(MainActivity.this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-//            dialog = new Dialog(MainActivity.this, android.R.style.Theme_Black);
-//            pingView=(TextView)findViewById(R.id.pingText);
-//            dialog.setCancelable(false);
-             testCase.loadingIndicator.setVisibility(View.VISIBLE);
-//            dialog.show();
-
-            // super.onPreExecute();
+            testCase.loadingIndicator.setVisibility(View.VISIBLE);
         }
-
 
         @Override
         protected ResultData doInBackground(Object... params) {
-            //Object UrlTestingUrl = params[0];
-            Testing=true;
-
-            String UrlTestingUrl= (String) params[0];
+            Testing = true;
+            String UrlTestingUrl = (String) params[0];
             ResultData data = new ResultData();
-//             data=null;
-            NetworkTestResult preFailSocketUnreachable = NetworkTestResult.PRE_FAIL_SOCKET_UNREACHABLE;
-//            dialog.dismiss();
-
-
 
             /**
              * check if ip address is rechable
              */
             try {
-//                this.in =InetAddress.getByName("http://192.168.1.4");
-                in = InetAddress.getByName("192.168.1.4");
+                inetAddress = InetAddress.getByName("192.168.1.2");
             } catch (UnknownHostException e) {
                 e.printStackTrace();
                 data.setStatus("prefail ==> UnknownHostException");
@@ -151,7 +113,7 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
             }
 
             try {
-                if (in.isReachable(10000)) {
+                if (inetAddress.isReachable(10000)) {
                     Log.d(TAG, "doInBackground: ip address reachable");
                 }
             } catch (IOException e) {
@@ -169,7 +131,6 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
                 InetSocketAddress sa = new InetSocketAddress("192.168.1.2", Integer.parseInt(testCase.port));
 
                 sSocket.connect(sa, 1000);           // --> change from 1 to 500 (for example)
-                // ss.close();
                 Log.d(TAG, "doInBackground: socket is rechable");
 
             } catch (Exception e) {
@@ -178,11 +139,8 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
                 testCase.setTestResult(data.getStatus().toString());
                 data.setException(e);
                 return data;
-//                preFailSocketUnreachable = NetworkTestResult.PRE_FAIL_SOCKET_UNREACHABLE;
             }
 
-
-            ResultData resultData = new ResultData();
 
             try {
                 Request request = new Request.Builder()
@@ -191,12 +149,9 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
 
 // ensure the response (and underlying response body) is closed
                 try (Response response = testCase.client.newCall(request).execute()) {
-//                     String currResponceCode=String.valueOf(response.code());
                     data.setCode(response.code());
-                    Log.d(TAG, "doInBackground: this is responce code in try catch");
-//                    resultData.setCode(response.code());
-                    testResponce(data, this.aaa);
-
+                    Log.d(TAG, "doInBackground: this is responce code inetAddress try catch");
+                    testResponce(data, this.resultData);
                     Log.d(TAG, "doInBackground: " + data);
                     return data;
                 }
@@ -211,37 +166,30 @@ public class CaseAdapter extends ArrayAdapter<TestCase> {
 
         }
 
-        // COMPLETED (3) Override onPostExecute to display the results in the TextView
+        // COMPLETED (3) Override onPostExecute to display the results inetAddress the TextView
         @Override
         protected void onPostExecute(ResultData resultData) {
-            Testing=false;
-           testCase.loadingIndicator.setVisibility(View.INVISIBLE);
-//            setTesting(false);
+            Testing = false;
+            testCase.loadingIndicator.setVisibility(View.INVISIBLE);
             if (resultData != null && !resultData.equals("")) {
-                if(resultData.exception != null){
+                if (resultData.exception != null) {
                     testCase.setTestResult("pre_fail");
-//
                 } else {
 
                     System.out.print(resultData);
-                   // testResponce(resultData, this.aaa);
                 }
 
             }
-//            resutlTextView.setText("pre_fail");
             testCase.resultTextView.setText(testCase.getTestResult());
         }
 
         public void testResponce(ResultData responceCode, ResultData expectedCode) {
-//            if (responceCode.equals(expectedCode.getCode())) {
-            if (responceCode.getCode()==expectedCode.getCode()) {
+            if (responceCode.getCode() == expectedCode.getCode()) {
                 Log.d(TAG, "onPostExecute: right");
                 testCase.setTestResult("pass");
-//                testCase.resultTextView.setText(testCase.getTestResult());
             } else {
                 Log.d(TAG, "onPostExecute: false");
                 testCase.setTestResult("fail");
-//                testCase.resultTextView.setText(testCase.getTestResult());
             }
         }
 
