@@ -36,6 +36,7 @@ import okhttp3.Response;
     public CaseAdapter(Context context, ArrayList<TestCase> testCases) {
         super(context, 0, testCases);
         // we added changes from 1.1-pref
+        // we added another change
     }
 
     @Override
