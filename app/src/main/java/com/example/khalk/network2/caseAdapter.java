@@ -27,7 +27,7 @@ import okhttp3.Response;
  * this is adapter for testcases
  */
 
-public class CaseAdapter extends ArrayAdapter<TestCase> {
+ class CaseAdapter extends ArrayAdapter<TestCase> {
     private static final String TAG = CaseAdapter.class.getName();
     private ProgressBar loadingIndicator;
     private TextView resultTestTextView;
