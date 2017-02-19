@@ -35,6 +35,7 @@ import okhttp3.Response;
 
     public CaseAdapter(Context context, ArrayList<TestCase> testCases) {
         super(context, 0, testCases);
+        // this should be on antother branch
     }
 
     @Override
