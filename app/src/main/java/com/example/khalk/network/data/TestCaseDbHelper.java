@@ -43,8 +43,8 @@ public class TestCaseDbHelper extends SQLiteOpenHelper {
                 + TestCaseEntry.COLUMN_TEST_NAME + " TEXT NOT NULL, "
                 + TestCaseEntry.COLUMN_TEST_CONTROLLER + " TEXT NOT NULL, "
                 + TestCaseEntry.COLUMN_TEST_PARA1 + " TEXT NOT NULL, "
-                + TestCaseEntry.COLUMN_TEST_PARA1 + " TEXT NOT NULL, "
-                + TestCaseEntry.COLUMN_TEST_PARA1 + " TEXT);";
+                + TestCaseEntry.COLUMN_TEST_PARA2 + " TEXT NOT NULL, "
+                + TestCaseEntry.COLUMN_TEST_PARA3 + " TEXT);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_Tests_TABLE);

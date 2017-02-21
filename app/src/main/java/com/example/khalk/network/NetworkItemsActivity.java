@@ -1,7 +1,6 @@
 package com.example.khalk.network;
 
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -18,10 +17,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
+
 import java.util.ArrayList;
 
 /**
@@ -91,36 +91,36 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         listView.setEmptyView(emptyView);
 
         mCursorAdapter = new TestCursorAdapter(this, null);
-//        listView.setAdapter(mCursorAdapter);
+        listView.setAdapter(mCursorAdapter);
 
         // Setup the item click listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Create new intent to go to {@link EditorActivity}
-                Intent intent = new Intent(NetworkItemsActivity.this, EditorActivity.class);
-
-                // Form the content URI that represents the specific pet that was clicked on,
-                // by appending the "id" (passed as input to this method) onto the
-                // {@link TestCaseEntry#CONTENT_URI}.
-                // For example, the URI would be "content://com.example.android.pets/pets/2"
-                // if the pet with ID 2 was clicked on.
-                Uri currentTestUri = ContentUris.withAppendedId(TestCaseEntry.CONTENT_URI, id);
-
-                // Set the URI on the data field of the intent
-                intent.setData(currentTestUri);
-
-                // Launch the {@link EditorActivity} to display the data for the current pet.
-                startActivity(intent);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+//                // Create new intent to go to {@link EditorActivity}
+//                Intent intent = new Intent(NetworkItemsActivity.this, EditorActivity.class);
+//
+//                // Form the content URI that represents the specific pet that was clicked on,
+//                // by appending the "id" (passed as input to this method) onto the
+//                // {@link TestCaseEntry#CONTENT_URI}.
+//                // For example, the URI would be "content://com.example.android.pets/pets/2"
+//                // if the pet with ID 2 was clicked on.
+//                Uri currentTestUri = ContentUris.withAppendedId(TestCaseEntry.CONTENT_URI, id);
+//
+//                // Set the URI on the data field of the intent
+//                intent.setData(currentTestUri);
+//
+//                // Launch the {@link EditorActivity} to display the data for the current pet.
+//                startActivity(intent);
+//            }
+//        });
 
         // Kick off the loader
         getLoaderManager().initLoader(TEST_LOADER, null, this);
 
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} inetAddress the list.
-        listView.setAdapter(caseAdapter);
+//        listView.setAdapter(caseAdapter);
     }
 
     /**
@@ -131,11 +131,11 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         // and Toto's pet attributes are the values.
         ContentValues values = new ContentValues();
         values.put(TestCaseEntry.COLUMN_TEST_NAME, "1");
-        values.put(TestCaseEntry.COLUMN_TEST_CONTROLLER, "SensoryBox");
-        values.put(TestCaseEntry.COLUMN_TEST_PARA1,"audio");
+        values.put(TestCaseEntry.COLUMN_TEST_CONTROLLER, "SensoryBoxAPK");
+        values.put(TestCaseEntry.COLUMN_TEST_PARA1,"AudioVolume");
         values.put(TestCaseEntry.COLUMN_TEST_PARA2, "0.8");
         values.put(TestCaseEntry.COLUMN_TEST_PARA3, " ");
-
+        Log.d(TAG, "insertTest: database from insert menue item");
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link TestCaseEntry#CONTENT_URI} to indicate that we want to insert
         // into the pets database table.
@@ -180,12 +180,10 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
             startActivity(settingsIntent);
             return true;
         }
-        if (id == R.id.menu_insert_item) {
-            Log.d(TAG, "onOptionsItemSelected: insert menu item");
-            return true;
-        }
+
         if (id == R.id.menu_insert_item) {
             insertTest();
+            Log.d(TAG, "onOptionsItemSelected: menu insert item");
             return true;
         }
 

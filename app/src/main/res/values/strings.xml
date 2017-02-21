@@ -63,6 +63,8 @@
     <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
+    <string name="editor_title">Editor Test</string>
+
 
 
 

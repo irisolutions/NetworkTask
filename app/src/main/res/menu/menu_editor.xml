@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!-- Options menu for the EditorActivity -->
     <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,4 +17,3 @@
             android:title="@string/action_delete"
             app:showAsAction="never" />
     </menu>
-</menu>

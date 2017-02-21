@@ -28,6 +28,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.khalk.network.NetworkItemsActivity"/>
         </activity>
+        <activity
+            android:name="com.example.khalk.network.EditorActivity"
+            android:label="@string/editor_title">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.khalk.network.NetworkItemsActivity"/>
+        </activity>
+
+        <provider
+            android:name=".data.TestCaseProvider"
+            android:authorities="com.example.khalk.network"
+            android:exported="false" />
 
     </application>
 
