@@ -14,7 +14,6 @@ public class TestCase {
     private String testName;
     private String expectedCode;
     private String testResult;
-
     public String solidUrl;
     public String baseUrl;
     public String port;
