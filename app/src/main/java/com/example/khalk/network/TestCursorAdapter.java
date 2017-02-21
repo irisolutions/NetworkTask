@@ -6,8 +6,10 @@ package com.example.khalk.network;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +79,15 @@ public class TestCursorAdapter extends CursorAdapter {
         resultTestTextView=(TextView)view.findViewById(R.id.test_result);
         testButton =(Button)view.findViewById(R.id.test_button);
         loadingIndicator=(ProgressBar)view.findViewById(R.id.loading_indicator);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefIP = sharedPrefs.getString(
+                context.getString(R.string.settings_ip),
+               context.getString(R.string.settings_ip_default));
+        Log.d(TAG, "onCreate: sharedPreferences ip ======>"+prefIP);
+
+        String prefPort = sharedPrefs.getString(context.getString(R.string.settings_port),context.getString(R.string.settings_port_default));
+        Log.d(TAG, "onCreate: sharedPreferences port =====>"+prefPort);
 
         //Find the columns of testButton attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_NAME);
