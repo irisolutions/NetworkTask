@@ -1,22 +1,10 @@
-package com.example.khalk.network2;
+package com.example.khalk.network;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by khalk on 2/12/2017.

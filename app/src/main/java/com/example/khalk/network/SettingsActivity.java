@@ -1,4 +1,4 @@
-package com.example.khalk.network2;
+package com.example.khalk.network;
 
 /**
  * Created by khalk on 2/21/2017.

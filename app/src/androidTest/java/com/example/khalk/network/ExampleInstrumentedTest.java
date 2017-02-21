@@ -1,4 +1,4 @@
-package com.example.khalk.network2;
+package com.example.khalk.network;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
