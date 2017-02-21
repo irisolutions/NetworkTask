@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class NetworkItemsActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getName();
+    private static final String TAG = NetworkItemsActivity.class.getName();
     ListView listView;
     CaseAdapter caseAdapter;
     ArrayList<TestCase> testCases;
