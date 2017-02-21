@@ -84,7 +84,7 @@ public class TestCursorAdapter extends CursorAdapter {
         int para1ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA1);
         int para2ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA2);
         int para3ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA3);
-
+////
         // Read the testButton attributes from the Cursor for the current testButton
         String testName = cursor.getString(nameColumnIndex);
         String testController = cursor.getString(controllerColumnIndex);
