@@ -96,6 +96,7 @@ public class TestCursorAdapter extends CursorAdapter {
 
         Log.d(TAG, "bindView: this is from database \n "+"========"+testController+testPara1+testPara2);
 
+       caseNameTextView.setText(testURL);
 //        testCase=new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", "192.168.1.2", "8888");
         testCase=new TestCase(testURL, "200", "192.168.1.2", "8888");
         testButton.setOnClickListener(new View.OnClickListener() {
