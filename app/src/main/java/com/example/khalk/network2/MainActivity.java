@@ -40,17 +40,7 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String enteredUrl = urlEditText.getText().toString();
-                String enteredPort = portEditText.getText().toString();
-                if (enteredUrl != null && enteredUrl != " ") {
-                    url = enteredUrl;
-                }
-                if (enteredPort != null && enteredPort != " ") {
-                    port = enteredPort;
-                }
                 Intent NetworkTestItems = new Intent(MainActivity.this, NetworkItemsActivity.class);
-                NetworkTestItems.putExtra("url", url);
-                NetworkTestItems.putExtra("port", port);
                 startActivity(NetworkTestItems);
             }
         });

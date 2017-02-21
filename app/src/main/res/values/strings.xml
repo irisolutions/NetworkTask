@@ -11,6 +11,18 @@
     <string name="enterUrl">Enter URL</string>
     <string name="enterPort">Enter Port</string>
     <string name="start">Start</string>
+    <!-- Settings Menu Item [CHAR LIMIT=NONE] -->
+    <string name="settings_menu_item">Settings</string>
+    <!-- Settings Activity Title [CHAR LIMIT=NONE] -->
+    <string name="settings_title">Network Settings</string>
+
+    <string name="settings_ip_name">IP</string>
+    <string name="settings_ip" translatable="false">ip</string>
+    <string name="settings_ip_default" translatable="false">192.168.1.2</string>
+
+    <string name="settings_port_name">PORT</string>
+    <string name="settings_port" translatable="false">port</string>
+    <string name="settings_port_default" translatable="false">8888</string>
 
 
 </resources>

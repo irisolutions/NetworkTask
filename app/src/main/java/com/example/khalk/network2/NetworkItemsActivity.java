@@ -1,7 +1,9 @@
 package com.example.khalk.network2;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,13 +33,23 @@ public class NetworkItemsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
         Log.d(TAG, "onCreate: we are inetAddress onCreate method");
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String prefIP = sharedPrefs.getString(
+                getString(R.string.settings_ip),
+                getString(R.string.settings_ip_default));
+        Log.d(TAG, "onCreate: sharedPreferences ip ======>"+prefIP);
+
+        String prefPort = sharedPrefs.getString(getString(R.string.settings_port),getString(R.string.settings_port_default));
+        Log.d(TAG, "onCreate: sharedPreferences port =====>"+prefPort);
+
 
         // Create a list of testcases
         testCases = new ArrayList<TestCase>();
-        url = intent.getStringExtra("url");
-        port = intent.getStringExtra("port");
+        url = prefIP;
+        port = prefPort;
         testCases.add(new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", url, port));
         testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/en", "200", url, port));
         testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/ar", "200", url, port));
@@ -86,6 +98,11 @@ public class NetworkItemsActivity extends AppCompatActivity {
             for (int i = 0; i < testCases.size(); i++) {
                 caseAdapter.run(testCases.get(i));
             }
+            return true;
+        }
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         }
 

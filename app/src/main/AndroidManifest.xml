@@ -19,8 +19,19 @@
         <activity
             android:name=".NetworkItemsActivity"
             android:label="@string/networkActivity"
-            ></activity>
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.khalk.network2.MainActivity"/>
+        </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/settings_title">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.khalk.network2.NetworkItemsActivity"/>
+        </activity>
 
     </application>
 
