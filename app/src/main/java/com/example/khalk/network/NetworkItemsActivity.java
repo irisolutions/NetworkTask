@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ public class NetworkItemsActivity extends AppCompatActivity {
         setContentView(R.layout.list);
 //        Intent intent = getIntent();
         Log.d(TAG, "onCreate: we are inetAddress onCreate method");
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String prefIP = sharedPrefs.getString(
@@ -62,6 +64,10 @@ public class NetworkItemsActivity extends AppCompatActivity {
         // There should be a {@link ListView} with the view ID called list, which is declared inetAddress the
         // list.xml layout file.
         listView = (ListView) findViewById(R.id.tescase_list);
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        listView.setEmptyView(emptyView);
 
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} inetAddress the list.
@@ -102,6 +108,10 @@ public class NetworkItemsActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
+            return true;
+        }
+        if (id == R.id.menu_insert_item) {
+            Log.d(TAG, "onOptionsItemSelected: insert menu item");
             return true;
         }
 

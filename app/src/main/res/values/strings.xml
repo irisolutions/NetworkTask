@@ -24,5 +24,9 @@
     <string name="settings_port" translatable="false">port</string>
     <string name="settings_port_default" translatable="false">8888</string>
 
+    <string name="insert_menu_item">Insert</string>
+    <string name="empty_view_title_text">Empty View</string>
+    <string name="empty_view_subtitle_text">Here is empty view </string>
+
 
 </resources>
