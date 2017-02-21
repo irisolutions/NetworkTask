@@ -1,7 +1,14 @@
 package com.example.khalk.network;
 
+import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -11,16 +18,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
 import java.util.ArrayList;
 
 /**
  * Created by khalk on 2/13/2017.
  */
 
-public class NetworkItemsActivity extends AppCompatActivity {
+public class NetworkItemsActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String TAG = NetworkItemsActivity.class.getName();
     ListView listView;
@@ -28,6 +36,11 @@ public class NetworkItemsActivity extends AppCompatActivity {
     ArrayList<TestCase> testCases;
     String url;
     String port;
+    /** Identifier for the test data loader */
+    private static final int TEST_LOADER = 0;
+
+    /** Adapter for the ListView */
+    TestCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +49,14 @@ public class NetworkItemsActivity extends AppCompatActivity {
 //        Intent intent = getIntent();
         Log.d(TAG, "onCreate: we are inetAddress onCreate method");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NetworkItemsActivity.this, EditorActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String prefIP = sharedPrefs.getString(
@@ -69,10 +90,59 @@ public class NetworkItemsActivity extends AppCompatActivity {
         View emptyView = findViewById(R.id.empty_view);
         listView.setEmptyView(emptyView);
 
+        mCursorAdapter = new TestCursorAdapter(this, null);
+//        listView.setAdapter(mCursorAdapter);
+
+        // Setup the item click listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Create new intent to go to {@link EditorActivity}
+                Intent intent = new Intent(NetworkItemsActivity.this, EditorActivity.class);
+
+                // Form the content URI that represents the specific pet that was clicked on,
+                // by appending the "id" (passed as input to this method) onto the
+                // {@link TestCaseEntry#CONTENT_URI}.
+                // For example, the URI would be "content://com.example.android.pets/pets/2"
+                // if the pet with ID 2 was clicked on.
+                Uri currentTestUri = ContentUris.withAppendedId(TestCaseEntry.CONTENT_URI, id);
+
+                // Set the URI on the data field of the intent
+                intent.setData(currentTestUri);
+
+                // Launch the {@link EditorActivity} to display the data for the current pet.
+                startActivity(intent);
+            }
+        });
+
+        // Kick off the loader
+        getLoaderManager().initLoader(TEST_LOADER, null, this);
+
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} inetAddress the list.
         listView.setAdapter(caseAdapter);
     }
+
+    /**
+     * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
+     */
+    private void insertTest() {
+        // Create a ContentValues object where column names are the keys,
+        // and Toto's pet attributes are the values.
+        ContentValues values = new ContentValues();
+        values.put(TestCaseEntry.COLUMN_TEST_NAME, "1");
+        values.put(TestCaseEntry.COLUMN_TEST_CONTROLLER, "SensoryBox");
+        values.put(TestCaseEntry.COLUMN_TEST_PARA1,"audio");
+        values.put(TestCaseEntry.COLUMN_TEST_PARA2, "0.8");
+        values.put(TestCaseEntry.COLUMN_TEST_PARA3, " ");
+
+        // Insert a new row for Toto into the provider using the ContentResolver.
+        // Use the {@link TestCaseEntry#CONTENT_URI} to indicate that we want to insert
+        // into the pets database table.
+        // Receive the new content URI that will allow us to access Toto's data in the future.
+        Uri newUri = getContentResolver().insert(TestCaseEntry.CONTENT_URI, values);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,9 +184,44 @@ public class NetworkItemsActivity extends AppCompatActivity {
             Log.d(TAG, "onOptionsItemSelected: insert menu item");
             return true;
         }
+        if (id == R.id.menu_insert_item) {
+            insertTest();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Define a projection that specifies the columns from the table we care about.
+        String[] projection = {
+                TestCaseEntry._ID,
+                TestCaseEntry.COLUMN_TEST_NAME,
+                TestCaseEntry.COLUMN_TEST_CONTROLLER,
+                TestCaseEntry.COLUMN_TEST_PARA1,
+                TestCaseEntry.COLUMN_TEST_PARA2
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                TestCaseEntry.CONTENT_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+// Update {@link PetCursorAdapter} with this new cursor containing updated pet data
+        mCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+// Callback called when the data needs to be deleted
+        mCursorAdapter.swapCursor(null);
+    }
 }
