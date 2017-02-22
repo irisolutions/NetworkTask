@@ -3,6 +3,7 @@ package com.example.khalk.network.data;
 /**
  * Created by khalk on 2/21/2017.
  */
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -11,8 +12,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
+
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
-import com.example.khalk.network.data.TestCaseContract;
 
 
 /**

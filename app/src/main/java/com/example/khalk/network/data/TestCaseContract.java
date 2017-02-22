@@ -15,7 +15,8 @@ public final class TestCaseContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    private TestCaseContract() {}
+    private TestCaseContract() {
+    }
 
     /**
      * The "Content authority" is a name for the entire content provider, similar to the
@@ -45,7 +46,9 @@ public final class TestCaseContract {
      */
     public static final class TestCaseEntry implements BaseColumns {
 
-        /** The content URI to access the test data in the provider */
+        /**
+         * The content URI to access the test data in the provider
+         */
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_TESTS);
 
         /**
@@ -60,56 +63,58 @@ public final class TestCaseContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TESTS;
 
-        /** Name of database table for tests */
+        /**
+         * Name of database table for tests
+         */
         public final static String TABLE_NAME = "tests";
 
         /**
          * Unique ID number for the test (only for use in the database table).
-         *
+         * <p>
          * Type: INTEGER
          */
         public final static String _ID = BaseColumns._ID;
 
         /**
          * Name of the test case.
-         *
+         * <p>
          * Type: TEXT
          */
-        public final static String COLUMN_TEST_NAME ="name";
-        
+        public final static String COLUMN_TEST_NAME = "name";
+
         /**
          * Controller for the test case
-         *
+         * <p>
          * Type: TEXT
          */
         public final static String COLUMN_TEST_CONTROLLER = "controller";
 
         /**
          * Para1 for the test case
-         *
+         * <p>
          * Type: TEXT
          */
         public final static String COLUMN_TEST_PARA1 = "para1";
 
         /**
          * Para2 for the test case
-         *
+         * <p>
          * Type: TEXT
          */
         public final static String COLUMN_TEST_PARA2 = "para2";
         /**
          * Para3 for the test case
-         *
+         * <p>
          * Type: TEXT
          */
         public final static String COLUMN_TEST_PARA3 = "para3";
         /**
          * expected code for the test case
-         *
+         * <p>
          * Type: TEXT
          */
         public final static String COLUMN_TEST_EXPECTED_CODE = "expected_code";
-        
+
     }
 
 }

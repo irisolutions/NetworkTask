@@ -26,7 +26,7 @@ import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
  * Created by khalk on 2/13/2017.
  */
 
-public class NetworkItemsActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
+public class NetworkItemsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = NetworkItemsActivity.class.getName();
 
@@ -34,10 +34,14 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
     ListView listView;
     AdapterView.OnItemClickListener myListViewClicked;
 
-    /** Identifier for the test data loader */
+    /**
+     * Identifier for the test data loader
+     */
     private static final int TEST_LOADER = 0;
 
-    /** Adapter for the ListView */
+    /**
+     * Adapter for the ListView
+     */
     TestCursorAdapter mCursorAdapter;
 
 
@@ -45,8 +49,6 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list);
-//        Intent intent = getIntent();
-        Log.d(TAG, "onCreate: we are inetAddress onCreate method");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +57,6 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
                 startActivity(intent);
             }
         });
-
 
 
         // Create an {@link CaseAdapter}, whose data source is a list of {@link Word}socket. The
@@ -74,31 +75,6 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
 
         listView.setAdapter(mCursorAdapter);
 
-
-
-//        listView.setOnItemClickListener( myListViewClicked );
-//        AdapterView.OnItemClickListener myListViewClicked = new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(NetworkItemsActivity.this, "Clicked at positon = " + position, Toast.LENGTH_SHORT).show();
-//
-//            }
-//        };
-
-//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//
-//            public boolean onItemLongClick(AdapterView<?> arg0, View v,
-//                                           int index, long arg3) {
-//                // TODO Auto-generated method stub
-//                Log.d(TAG, "onItemLongClick:======================================================= ");
-//                String str=listView.getItemAtPosition(index).toString();
-//                Log.d(TAG, "onItemLongClick: "+str);
-//
-//                return true;
-//            }
-//        });
-
         // Setup the item click listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -115,11 +91,9 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
 
                 // Set the URI on the data field of the intent
                 intent.setData(currentTestUri);
-                Log.d(TAG, "onItemClick: ================================================>" + position);
 
                 // Launch the {@link EditorActivity} to display the data for the current pet.
                 startActivity(intent);
-
             }
         });
 
@@ -139,10 +113,10 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         ContentValues values = new ContentValues();
         values.put(TestCaseEntry.COLUMN_TEST_NAME, "1");
         values.put(TestCaseEntry.COLUMN_TEST_CONTROLLER, "SensoryBoxAPK");
-        values.put(TestCaseEntry.COLUMN_TEST_PARA1,"AudioVolume");
+        values.put(TestCaseEntry.COLUMN_TEST_PARA1, "AudioVolume");
         values.put(TestCaseEntry.COLUMN_TEST_PARA2, "0.8");
         values.put(TestCaseEntry.COLUMN_TEST_PARA3, " ");
-        values.put(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE,"200");
+        values.put(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE, "200");
         Log.d(TAG, "insertTest: database from insert menue item");
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link TestCaseEntry#CONTENT_URI} to indicate that we want to insert
@@ -177,9 +151,10 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         }
         if (id == R.id.menu_testAll_item) {
             for (int i = 0; i < listView.getChildCount(); i++) {
-                View view=listView.getChildAt(i);
-                CustomLinearLayout custom=(CustomLinearLayout)view.findViewById(R.id.item_container);
+                View view = listView.getChildAt(i);
+                CustomLinearLayout custom = (CustomLinearLayout) view.findViewById(R.id.item_container);
                 custom.run(custom.getTestCase());
+                while(custom.isTesting()){}
             }
             return true;
         }
@@ -208,6 +183,7 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
                 TestCaseEntry.COLUMN_TEST_CONTROLLER,
                 TestCaseEntry.COLUMN_TEST_PARA1,
                 TestCaseEntry.COLUMN_TEST_PARA2,
+                TestCaseEntry.COLUMN_TEST_PARA3,
                 TestCaseEntry.COLUMN_TEST_EXPECTED_CODE
         };
 

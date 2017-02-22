@@ -25,38 +25,57 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
+
 /**
  * Allows user to create a new test or edit an existing one.
  */
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the test data loader */
+    /**
+     * Identifier for the test data loader
+     */
     private static final int EXISTING_TEST_LOADER = 0;
 
-    /** Content URI for the existing test (null if it's a new test) */
+    /**
+     * Content URI for the existing test (null if it's a new test)
+     */
     private Uri mCurrentTestUri;
 
-    /** EditText field to enter the test's name */
+    /**
+     * EditText field to enter the test's name
+     */
     private EditText mNameEditText;
 
-    /** EditText field to enter the test's controller */
+    /**
+     * EditText field to enter the test's controller
+     */
     private EditText mControllerEditText;
 
-    /** EditText field to enter the test's para1 */
+    /**
+     * EditText field to enter the test's para1
+     */
     private EditText mPara1EditText;
 
-    /** EditText field to enter the test's para2 */
+    /**
+     * EditText field to enter the test's para2
+     */
     private EditText mPara2EditText;
 
-    /** EditText field to enter the test's para3 */
+    /**
+     * EditText field to enter the test's para3
+     */
     private EditText mPara3EditText;
 
-    /** EditText field to enter the test's expected code */
+    /**
+     * EditText field to enter the test's expected code
+     */
     private EditText mExpectedCodeEditText;
 
 
-    /** Boolean flag that keeps track of whether the test has been edited (true) or not (false) */
+    /**
+     * Boolean flag that keeps track of whether the test has been edited (true) or not (false)
+     */
     private boolean mTestHasChanged = false;
 
     /**
@@ -102,11 +121,11 @@ public class EditorActivity extends AppCompatActivity implements
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_test_name);
-        mControllerEditText=(EditText)findViewById(R.id.edit_controller_name);
-        mPara1EditText=(EditText)findViewById(R.id.edit_para1_name);
-        mPara2EditText=(EditText)findViewById(R.id.edit_para2_name);
-        mPara3EditText=(EditText)findViewById(R.id.edit_para3_name);
-        mExpectedCodeEditText=(EditText)findViewById(R.id.edit_expected_code);
+        mControllerEditText = (EditText) findViewById(R.id.edit_controller_name);
+        mPara1EditText = (EditText) findViewById(R.id.edit_para1_name);
+        mPara2EditText = (EditText) findViewById(R.id.edit_para2_name);
+        mPara3EditText = (EditText) findViewById(R.id.edit_para3_name);
+        mExpectedCodeEditText = (EditText) findViewById(R.id.edit_expected_code);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -137,8 +156,8 @@ public class EditorActivity extends AppCompatActivity implements
         // and check if all the fields in the editor are blank
         if (mCurrentTestUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(controllerString) &&
-                TextUtils.isEmpty(para1String) && TextUtils.isEmpty(para2String )&& TextUtils.isEmpty(para3String )
-                && TextUtils.isEmpty(expectedCodeString )) {
+                TextUtils.isEmpty(para1String) && TextUtils.isEmpty(para2String) && TextUtils.isEmpty(para3String)
+                && TextUtils.isEmpty(expectedCodeString)) {
             // Since no fields were modified, we can return early without creating a new test.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -150,9 +169,9 @@ public class EditorActivity extends AppCompatActivity implements
         values.put(TestCaseEntry.COLUMN_TEST_NAME, nameString);
         values.put(TestCaseEntry.COLUMN_TEST_CONTROLLER, controllerString);
         values.put(TestCaseEntry.COLUMN_TEST_PARA1, para1String);
-        values.put(TestCaseEntry.COLUMN_TEST_PARA2,para2String);
-        values.put(TestCaseEntry.COLUMN_TEST_PARA3,para3String);
-        values.put(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE,expectedCodeString);
+        values.put(TestCaseEntry.COLUMN_TEST_PARA2, para2String);
+        values.put(TestCaseEntry.COLUMN_TEST_PARA3, para3String);
+        values.put(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE, expectedCodeString);
 
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
@@ -296,7 +315,8 @@ public class EditorActivity extends AppCompatActivity implements
                 TestCaseEntry.COLUMN_TEST_CONTROLLER,
                 TestCaseEntry.COLUMN_TEST_PARA1,
                 TestCaseEntry.COLUMN_TEST_PARA2,
-                TestCaseEntry.COLUMN_TEST_PARA3
+                TestCaseEntry.COLUMN_TEST_PARA3,
+                TestCaseEntry.COLUMN_TEST_EXPECTED_CODE
         };
 
         // This loader will execute the ContentProvider's query method on a background thread
@@ -324,14 +344,16 @@ public class EditorActivity extends AppCompatActivity implements
             int para1ColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA1);
             int para2ColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA2);
             int para3ColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA3);
+            int expectedCodeColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE);
 
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             String controller = cursor.getString(controllerColumnIndex);
-            String para1=cursor.getString(para1ColumnIndex);
-            String para2=cursor.getString(para2ColumnIndex);
-            String para3=cursor.getString(para3ColumnIndex);
+            String para1 = cursor.getString(para1ColumnIndex);
+            String para2 = cursor.getString(para2ColumnIndex);
+            String para3 = cursor.getString(para3ColumnIndex);
+            String expectedCode = cursor.getString(expectedCodeColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
@@ -339,6 +361,7 @@ public class EditorActivity extends AppCompatActivity implements
             mPara1EditText.setText(para1);
             mPara2EditText.setText(para2);
             mPara3EditText.setText(para3);
+            mExpectedCodeEditText.setText(expectedCode);
 
         }
     }
@@ -351,6 +374,7 @@ public class EditorActivity extends AppCompatActivity implements
         mPara1EditText.setText("");
         mPara2EditText.setText("");
         mPara3EditText.setText("");
+        mExpectedCodeEditText.setText("");
     }
 
     /**

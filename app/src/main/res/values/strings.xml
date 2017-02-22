@@ -52,15 +52,15 @@
     
     <!-- Toast message in editor when current test has failed to be deleted [CHAR LIMIT=NONE] -->
     <string name="editor_delete_test_failed">Error with deleting test</string>
-    <!-- Toast message in editor when current pet was successfully deleted [CHAR LIMIT=NONE] -->
-    <string name="editor_delete_test_successful">Pet deleted</string>
+    <!-- Toast message in editor when current test was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_test_successful">Test deleted</string>
 
-    <!-- Dialog message to ask the user to confirm deleting the current pet [CHAR LIMIT=NONE] -->
+    <!-- Dialog message to ask the user to confirm deleting the current test [CHAR LIMIT=NONE] -->
     <string name="delete_dialog_msg">Delete this test?</string>
-    <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
+    <!-- Label for editor menu option to save test and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
 
-    <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
+    <!-- Label for editor overflow menu option that deletes the current test [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
     <string name="editor_title">Editor Test</string>

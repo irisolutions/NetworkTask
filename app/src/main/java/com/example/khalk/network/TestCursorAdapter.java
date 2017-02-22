@@ -25,7 +25,6 @@ import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
 public class TestCursorAdapter extends CursorAdapter {
 
     private static final String TAG = TestCursorAdapter.class.getName();
-    private Boolean testing=false;
     private Context mContext;
 
     /**
@@ -36,7 +35,7 @@ public class TestCursorAdapter extends CursorAdapter {
      */
     public TestCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
-        mContext=context;
+        mContext = context;
     }
 
     /**
@@ -58,43 +57,39 @@ public class TestCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        TextView caseNameTextView =(TextView)view.findViewById(R.id.case_name);
+        TextView caseNameTextView = (TextView) view.findViewById(R.id.case_name);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String prefIP = sharedPrefs.getString(
                 context.getString(R.string.settings_ip),
-               context.getString(R.string.settings_ip_default));
-//        Log.d(TAG, "onCreate: sharedPreferences ip ======>"+prefIP);
-        String prefPort = sharedPrefs.getString(context.getString(R.string.settings_port),context.getString(R.string.settings_port_default));
-//        Log.d(TAG, "onCreate: sharedPreferences port =====>"+prefPort);
+                context.getString(R.string.settings_ip_default));
+        String prefPort = sharedPrefs.getString(context.getString(R.string.settings_port), context.getString(R.string.settings_port_default));
 
         //Find the columns of testButton attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_NAME);
         int controllerColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_CONTROLLER);
-        int para1ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA1);
-        int para2ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA2);
-        int para3ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA3);
-        int expectedTestCodeIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE);
-////
+        int para1ColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA1);
+        int para2ColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA2);
+        int para3ColumnIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA3);
+        int expectedTestCodeIndex = cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE);
+
+        Log.d(TAG, "bindView: para3 column index ========= "+para3ColumnIndex);
+
         // Read the testButton attributes from the Cursor for the current testButton
         String testName = cursor.getString(nameColumnIndex);
         String testController = cursor.getString(controllerColumnIndex);
-        String testPara1=cursor.getString(para1ColumnIndex);
-        String testPara2=cursor.getString(para2ColumnIndex);
-//        String testPara3=cursor.getString(para3ColumnIndex);
-        String expectedTestCode=cursor.getString(expectedTestCodeIndex);
+        String testPara1 = cursor.getString(para1ColumnIndex);
+        String testPara2 = cursor.getString(para2ColumnIndex);
+        String testPara3 = cursor.getString(para3ColumnIndex);
+        String expectedTestCode = cursor.getString(expectedTestCodeIndex);
 
-        String testURL=testController+"/"+testPara1+"/"+testPara2;
-
-        Log.d(TAG, "bindView: this is from database \n "+"========"+testController+testPara1+testPara2);
-
-//       caseNameTextView.setText(testURL);
-//        testCase=new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", "192.168.1.2", "8888");
-        CustomLinearLayout customLinearLayout = (CustomLinearLayout)view;
-        customLinearLayout.setTestCase(new TestCase(testURL,expectedTestCode,prefIP,prefPort));
+        String testURL = testController + "/" + testPara1 + "/" + testPara2;
+        if(testPara3 !=null && testPara3 !="" && testPara3 != " "){
+            testURL=testURL+"/"+testPara3;
+        }
+        CustomLinearLayout customLinearLayout = (CustomLinearLayout) view;
+        customLinearLayout.setTestCase(new TestCase(testURL, expectedTestCode, prefIP, prefPort));
         customLinearLayout.setUrlTestingContext(mContext);
-        Log.d(TAG, "bindView: the context parse to url Testing ======>>> "+ mContext.getClass().toString());
-
 
 
     }
