@@ -1,6 +1,5 @@
 package com.example.khalk.network;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -13,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -28,9 +28,10 @@ import okhttp3.Response;
 
 public class CustomLinearLayout extends LinearLayout {
     private String TAG = CustomLinearLayout.class.getName();
-    private TestCase testCase;
+    private TestCaseData testCaseData;
     private Boolean testing = false;
-    private Context mContext;
+    private IDialogHandler iDialogHandler;
+    testCaseUIHandler a;
 
     public CustomLinearLayout(Context context) {
         super(context);
@@ -49,78 +50,69 @@ public class CustomLinearLayout extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public TestCase getTestCase() {
-        return this.testCase;
+    public TestCaseData getTestCaseData() {
+        return this.testCaseData;
     }
 
-    public void setUrlTestingContext(Context c) {
-        this.mContext = c;
-    }
 
     public Boolean isTesting(){
         return testing;
     }
 
-    public void setTestCase(TestCase testCaseObject) {
-        this.testCase = testCaseObject;
-        Button testButton = (Button) findViewById(R.id.test_button);
-        TextView testNameTextView = (TextView) findViewById(R.id.case_name);
-        final TextView testResultTextView = (TextView) findViewById(R.id.test_result);
-        ProgressBar loadingBarIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
-        TextView expectedTextView = (TextView) findViewById(R.id.expected_code);
-        testNameTextView.setText(testCase.getTestName());
-        expectedTextView.setText(testCase.getExpectedCode());
-        testCase.setLoadingIndicator(loadingBarIndicator);
-        testCase.setResultTextView(testResultTextView);
+    public void setTestCaseData(TestCaseData testCaseDataObject) {
+        this.testCaseData = testCaseDataObject;
+//        Button testButton = (Button) findViewById(R.id.test_button);
+//        TextView testNameTextView = (TextView) findViewById(R.id.case_name);
+//        final TextView testResultTextView = (TextView) findViewById(R.id.test_result);
+//        ProgressBar loadingBarIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+//        TextView expectedTextView = (TextView) findViewById(R.id.expected_code);
+//        testNameTextView.setText(testCaseData.getTestName());
+//        expectedTextView.setText(testCaseData.getExpectedCode());
+//        testCaseData.setLoadingIndicator(loadingBarIndicator);
+//        testCaseData.setResultTextView(testResultTextView);
+        a = new testCaseUIHandler();
+        a.setUITestCase();
+        a.initUITestCase();
 
-        testButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-         if(!testing) {
-             testResultTextView.setText(" ");
-             run(testCase);
-         }
 
-            }
-        });
     }
 
-    public void run(TestCase test) {
+    public void run(TestCaseData test) {
         CustomLinearLayout.ResultData expectedResultData = new CustomLinearLayout.ResultData();
         expectedResultData.setCode(Integer.parseInt(test.getExpectedCode()));
         Log.d(TAG, "run: the final url " + test.finalUrl);
         new CustomLinearLayout.UrlTesting(expectedResultData, test).execute(test.finalUrl);
     }
 
+    public void setiDialogHandler(IDialogHandler iDialogHandler) {
+        this.iDialogHandler = iDialogHandler;
+    }
+
 
     public class UrlTesting extends AsyncTask<Object, Object, CustomLinearLayout.ResultData> implements DialogInterface.OnCancelListener {
         private CustomLinearLayout.ResultData resultData = null;
         InetAddress inetAddress;
-        TestCase testCase;
-        private Dialog dialog = null;
+        TestCaseData testCaseData;
 
-        UrlTesting(CustomLinearLayout.ResultData code, TestCase test) {
+        UrlTesting(CustomLinearLayout.ResultData code, TestCaseData test) {
             this.resultData = code;
             inetAddress = null;
-            this.testCase = test;
+            this.testCaseData = test;
         }
 
         @Override
         protected void onPreExecute() {
-            testCase.loadingIndicator.setVisibility(View.VISIBLE);
+            ProgressBar loadingBarIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+            loadingBarIndicator.setVisibility(View.VISIBLE);
+            iDialogHandler.showDialog();
 
-            // To disable the whole screen --> setCancelable(false);
-            dialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-//            dialog = new Dialog(mContext, android.R.style.Theme_Black);
-            dialog.setCancelable(false);
-            dialog.show();
         }
 
         @Override
         protected CustomLinearLayout.ResultData doInBackground(Object... params) {
             String UrlTestingUrl = (String) params[0];
             CustomLinearLayout.ResultData data = new CustomLinearLayout.ResultData();
-            dialog.dismiss();
+            iDialogHandler.hideDialog();
             testing=true;
 
 
@@ -128,11 +120,11 @@ public class CustomLinearLayout extends LinearLayout {
              * check if ip address is rechable
              */
             try {
-                inetAddress = InetAddress.getByName(testCase.solidUrl);
+                inetAddress = InetAddress.getByName(testCaseData.solidUrl);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
                 data.setStatus("prefail ==> UnknownHostException");
-                testCase.setTestResult(data.getStatus().toString());
+                testCaseData.setTestResult(data.getStatus().toString());
                 data.setException(e);
                 return data;
             }
@@ -145,7 +137,7 @@ public class CustomLinearLayout extends LinearLayout {
                 Log.d(TAG, "doInBackground: ip address unreachable");
                 e.printStackTrace();
                 data.setStatus("prefail ==> unreachable IP address");
-                testCase.setTestResult(data.getStatus().toString());
+                testCaseData.setTestResult(data.getStatus().toString());
                 data.setException(e);
                 return data;
             }
@@ -153,7 +145,7 @@ public class CustomLinearLayout extends LinearLayout {
              * check if socket rechable
              */
             try (Socket sSocket = new Socket()) {
-                InetSocketAddress sa = new InetSocketAddress(testCase.solidUrl, Integer.parseInt(testCase.port));
+                InetSocketAddress sa = new InetSocketAddress(testCaseData.solidUrl, Integer.parseInt(testCaseData.port));
 
                 sSocket.connect(sa, 1000);           // --> change from 1 to 500 (for example)
                 Log.d(TAG, "doInBackground: socket is rechable");
@@ -161,7 +153,7 @@ public class CustomLinearLayout extends LinearLayout {
             } catch (Exception e) {
                 Log.d(TAG, "doInBackground: socket is unreachable");
                 data.setStatus("prefail ==> un reachable Socket");
-                testCase.setTestResult(data.getStatus().toString());
+                testCaseData.setTestResult(data.getStatus().toString());
                 data.setException(e);
                 return data;
             }
@@ -174,7 +166,7 @@ public class CustomLinearLayout extends LinearLayout {
                 Log.d(TAG, "doInBackground: url===="+UrlTestingUrl);
 
 // ensure the response (and underlying response body) is closed
-                try (Response response = testCase.client.newCall(request).execute()) {
+                try (Response response = testCaseData.client.newCall(request).execute()) {
                     data.setCode(response.code());
                     Log.d(TAG, "doInBackground: this is responce code inetAddress try catch");
                     testResponce(data, this.resultData);
@@ -185,7 +177,7 @@ public class CustomLinearLayout extends LinearLayout {
             } catch (IOException e) {
                 // TODO: 2/12/2017 handle 3 status: pass. fail. prepare_fail
                 data.setStatus("prefail ==> no responce");
-                testCase.setTestResult(data.getStatus().toString());
+                testCaseData.setTestResult(data.getStatus().toString());
                 data.setException(e);
                 return data;
             }
@@ -195,12 +187,12 @@ public class CustomLinearLayout extends LinearLayout {
         // COMPLETED (3) Override onPostExecute to display the results inetAddress the TextView
         @Override
         protected void onPostExecute(CustomLinearLayout.ResultData resultData) {
-            testCase.loadingIndicator.setVisibility(View.INVISIBLE);
+            testCaseData.loadingIndicator.setVisibility(View.INVISIBLE);
             testing=false;
             if (resultData != null && !resultData.equals("")) {
                 if (resultData.exception != null) {
-                    if (testCase.getTestResult() == null) {
-                        testCase.setTestResult("pre_fail");
+                    if (testCaseData.getTestResult() == null) {
+                        testCaseData.setTestResult("pre_fail");
                     }
 
                 } else {
@@ -209,17 +201,17 @@ public class CustomLinearLayout extends LinearLayout {
                 }
 
             }
-            testCase.resultTextView.setText(testCase.getTestResult());
+            testCaseData.resultTextView.setText(testCaseData.getTestResult());
         }
 
         public void testResponce(CustomLinearLayout.ResultData responceCode, CustomLinearLayout.ResultData expectedCode) {
             Log.d(TAG, "testResponce: responce code=====" + responceCode.getCode());
             if (responceCode.getCode() == expectedCode.getCode()) {
                 Log.d(TAG, "onPostExecute: right");
-                testCase.setTestResult("pass");
+                testCaseData.setTestResult("pass");
             } else {
                 Log.d(TAG, "onPostExecute: false");
-                testCase.setTestResult("fail");
+                testCaseData.setTestResult("fail");
             }
         }
 
@@ -256,6 +248,42 @@ public class CustomLinearLayout extends LinearLayout {
 
         public String getStatus() {
             return status;
+        }
+    }
+
+    public class testCaseUIHandler implements ITestCaseData {
+        private Button testButton;
+        private TextView testNameTextView;
+        private TextView testResultTextView;
+        ProgressBar loadingBarIndicator;
+        TextView expectedTextView;
+        @Override
+        public void setUITestCase() {
+            testButton = (Button) findViewById(R.id.test_button);
+            testNameTextView = (TextView) findViewById(R.id.case_name);
+            testResultTextView = (TextView) findViewById(R.id.test_result);
+            loadingBarIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
+            expectedTextView = (TextView) findViewById(R.id.expected_code);
+
+        }
+
+        @Override
+        public void initUITestCase() {
+            testNameTextView.setText(testCaseData.getTestName());
+            expectedTextView.setText(testCaseData.getExpectedCode());
+            testCaseData.setLoadingIndicator(loadingBarIndicator);
+            testCaseData.setResultTextView(testResultTextView);
+            testButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!testing) {
+                        testResultTextView.setText(" ");
+                        run(testCaseData);
+                    }
+
+                }
+            });
+
         }
     }
 

@@ -4,6 +4,7 @@ package com.example.khalk.network;
  * Created by khalk on 2/21/2017.
  */
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.TextView;
 
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
 
@@ -22,9 +22,10 @@ import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
  * that uses a {@link Cursor} of testButton data as its data source. This adapter knows
  * how to create list items for each row of testButton data in the {@link Cursor}.
  */
-public class TestCursorAdapter extends CursorAdapter {
+public class TestCursorAdapter extends CursorAdapter  {
 
     private static final String TAG = TestCursorAdapter.class.getName();
+    private final UIHandler iDialogHandler = new UIHandler();
     private Context mContext;
 
     /**
@@ -57,7 +58,7 @@ public class TestCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        TextView caseNameTextView = (TextView) view.findViewById(R.id.case_name);
+        //TextView caseNameTextView = (TextView) view.findViewById(R.id.case_name);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String prefIP = sharedPrefs.getString(
@@ -88,12 +89,30 @@ public class TestCursorAdapter extends CursorAdapter {
             testURL=testURL+"/"+testPara3;
         }
         CustomLinearLayout customLinearLayout = (CustomLinearLayout) view;
-        customLinearLayout.setTestCase(new TestCase(testURL, expectedTestCode, prefIP, prefPort));
-        customLinearLayout.setUrlTestingContext(mContext);
+        customLinearLayout.setTestCaseData(new TestCaseData(testURL, expectedTestCode, prefIP, prefPort));
+        //customLinearLayout.setUrlTestingContext(mContext);
+
+        customLinearLayout.setiDialogHandler(iDialogHandler);
 
 
     }
 
+    private class UIHandler implements IDialogHandler {
+        private Dialog dialog = null;
 
+        @Override
+        public void showDialog() {
+            // To disable the whole screen --> setCancelable(false);
+//                dialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+            dialog = new Dialog(mContext, android.R.style.Theme_Black);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        public void hideDialog() {
+            dialog.dismiss();
+        }
+    }
 }
 

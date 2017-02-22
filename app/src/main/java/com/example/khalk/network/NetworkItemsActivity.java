@@ -153,7 +153,7 @@ public class NetworkItemsActivity extends AppCompatActivity implements LoaderMan
             for (int i = 0; i < listView.getChildCount(); i++) {
                 View view = listView.getChildAt(i);
                 CustomLinearLayout custom = (CustomLinearLayout) view.findViewById(R.id.item_container);
-                custom.run(custom.getTestCase());
+                custom.run(custom.getTestCaseData());
                 while(custom.isTesting()){}
             }
             return true;

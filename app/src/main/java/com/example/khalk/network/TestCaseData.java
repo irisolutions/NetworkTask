@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient;
  * Created by khalk on 2/12/2017.
  */
 
-public class TestCase {
+public class TestCaseData {
     private String testName;
     private String expectedCode;
     private String testResult;
@@ -22,7 +22,7 @@ public class TestCase {
     public String finalUrl;
 
 
-    TestCase(String caseName, String expectedCode) {
+    TestCaseData(String caseName, String expectedCode) {
         this.testName = caseName;
         this.expectedCode = expectedCode;
         port = "8888";
@@ -32,7 +32,7 @@ public class TestCase {
         client = new OkHttpClient();
     }
 
-    TestCase(String caseName, String expectedCode, String url) {
+    TestCaseData(String caseName, String expectedCode, String url) {
         this.testName = caseName;
         this.expectedCode = expectedCode;
         port = "8888";
@@ -42,7 +42,7 @@ public class TestCase {
         client = new OkHttpClient();
     }
 
-    TestCase(String caseName, String expectedCode, String url, String port) {
+    TestCaseData(String caseName, String expectedCode, String url, String port) {
         this.testName = caseName;
         this.expectedCode = expectedCode;
         this.port = port;
