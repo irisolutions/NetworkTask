@@ -25,6 +25,8 @@ import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
 public class TestCursorAdapter extends CursorAdapter {
 
     private static final String TAG = TestCursorAdapter.class.getName();
+    private Boolean testing=false;
+    private Context mContext;
 
     /**
      * Constructs a new {@link TestCursorAdapter}.
@@ -34,6 +36,7 @@ public class TestCursorAdapter extends CursorAdapter {
      */
     public TestCursorAdapter(Context context, Cursor c) {
         super(context, c, 0 /* flags */);
+        mContext=context;
     }
 
     /**
@@ -89,7 +92,13 @@ public class TestCursorAdapter extends CursorAdapter {
 //        testCase=new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", "192.168.1.2", "8888");
         CustomLinearLayout customLinearLayout = (CustomLinearLayout)view;
         customLinearLayout.setTestCase(new TestCase(testURL,expectedTestCode,prefIP,prefPort));
+        customLinearLayout.setUrlTestingContext(mContext);
+        Log.d(TAG, "bindView: the context parse to url Testing ======>>> "+ mContext.getClass().toString());
+
+
+
     }
+
 
 }
 

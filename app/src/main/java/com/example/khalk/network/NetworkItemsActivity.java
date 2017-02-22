@@ -40,6 +40,7 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
     /** Adapter for the ListView */
     TestCursorAdapter mCursorAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +71,7 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         listView.setEmptyView(emptyView);
 
         mCursorAdapter = new TestCursorAdapter(this, null);
+
         listView.setAdapter(mCursorAdapter);
 
 

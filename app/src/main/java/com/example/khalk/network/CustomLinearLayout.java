@@ -1,6 +1,8 @@
 package com.example.khalk.network;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -11,11 +13,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -27,6 +31,7 @@ public class CustomLinearLayout extends LinearLayout {
     private String TAG=CustomLinearLayout.class.getName();
     private TestCase testCase;
     private Boolean testing=false;
+    private Context mContext;
 
     public CustomLinearLayout(Context context) {
         super(context);
@@ -49,11 +54,15 @@ public class CustomLinearLayout extends LinearLayout {
         return this.testCase;
     }
 
+    public void setUrlTestingContext(Context c){
+        this.mContext=c;
+    }
+
     public void setTestCase(TestCase testCaseObject) {
         this.testCase = testCaseObject;
         Button testButton = (Button) findViewById(R.id.test_button);
         TextView testNameTextView=(TextView)findViewById(R.id.case_name);
-        TextView testResultTextView=(TextView)findViewById(R.id.test_result);
+        final TextView testResultTextView=(TextView)findViewById(R.id.test_result);
         ProgressBar loadingBarIndicator=(ProgressBar)findViewById(R.id.loading_indicator);
         TextView expectedTextView=(TextView)findViewById(R.id.expected_code);
         testNameTextView.setText(testCase.getTestName());
@@ -65,6 +74,7 @@ public class CustomLinearLayout extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(!testing) {
+                    testResultTextView.setText(" ");
                     run(testCase);
                 }
             }
@@ -79,10 +89,17 @@ public class CustomLinearLayout extends LinearLayout {
     }
 
 
-    public class UrlTesting extends AsyncTask<Object, Object, CustomLinearLayout.ResultData>  {
+    public class UrlTesting extends AsyncTask<Object, Object, CustomLinearLayout.ResultData>  implements DialogInterface.OnCancelListener  {
         private CustomLinearLayout.ResultData resultData = null;
         InetAddress inetAddress;
         TestCase testCase;
+        private Dialog dialog = null;
+       // private Context mContext;
+
+//        public void setContext (Context context){
+//            mContext = context;
+//        }
+
 
         UrlTesting(CustomLinearLayout.ResultData code, TestCase test) {
             this.resultData = code;
@@ -95,7 +112,14 @@ public class CustomLinearLayout extends LinearLayout {
 
 //            testCase.loadingIndicator.setVisibility(View.VISIBLE);
             testCase.loadingIndicator.setVisibility(View.VISIBLE);
-            testing=true;
+
+            // To disable the whole screen --> setCancelable(false);
+//            dialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+            dialog = new Dialog(mContext, android.R.style.Theme_Black);
+            dialog.setCancelable(false);
+            dialog.show();
+
+//            testing=true;
         }
 
         @Override
@@ -103,6 +127,8 @@ public class CustomLinearLayout extends LinearLayout {
             testing = true;
             String UrlTestingUrl = (String) params[0];
             CustomLinearLayout.ResultData data = new CustomLinearLayout.ResultData();
+            dialog.dismiss();
+
 
             /**
              * check if ip address is rechable
@@ -199,6 +225,10 @@ public class CustomLinearLayout extends LinearLayout {
             }
         }
 
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            cancel(true);
+        }
     }
 
     private class ResultData {
