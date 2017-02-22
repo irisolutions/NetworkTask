@@ -1,15 +1,14 @@
 package com.example.khalk.network;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,12 +16,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
-
-import java.util.ArrayList;
 
 /**
  * Created by khalk on 2/13/2017.
@@ -31,11 +29,11 @@ import java.util.ArrayList;
 public class NetworkItemsActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String TAG = NetworkItemsActivity.class.getName();
+
+    /*declare list view */
     ListView listView;
-    CaseAdapter caseAdapter;
-    ArrayList<TestCase> testCases;
-    String url;
-    String port;
+    AdapterView.OnItemClickListener myListViewClicked;
+
     /** Identifier for the test data loader */
     private static final int TEST_LOADER = 0;
 
@@ -58,28 +56,9 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         });
 
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String prefIP = sharedPrefs.getString(
-                getString(R.string.settings_ip),
-                getString(R.string.settings_ip_default));
-        Log.d(TAG, "onCreate: sharedPreferences ip ======>"+prefIP);
-
-        String prefPort = sharedPrefs.getString(getString(R.string.settings_port),getString(R.string.settings_port_default));
-        Log.d(TAG, "onCreate: sharedPreferences port =====>"+prefPort);
-
-
-        // Create a list of testcases
-        testCases = new ArrayList<TestCase>();
-        url = prefIP;
-        port = prefPort;
-        testCases.add(new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", url, port));
-        testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/en", "200", url, port));
-        testCases.add(new TestCase("SensoryBoxAPK/ChangeLanguage/ar", "200", url, port));
-
 
         // Create an {@link CaseAdapter}, whose data source is a list of {@link Word}socket. The
         // adapter knows how to create list items for each item inetAddress the list.
-        caseAdapter = new CaseAdapter(this, testCases);
 
         // Find the {@link ListView} object inetAddress the view hierarchy of the {@link Activity}.
         // There should be a {@link ListView} with the view ID called list, which is declared inetAddress the
@@ -93,34 +72,60 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         mCursorAdapter = new TestCursorAdapter(this, null);
         listView.setAdapter(mCursorAdapter);
 
-        // Setup the item click listener
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+//        listView.setOnItemClickListener( myListViewClicked );
+//        AdapterView.OnItemClickListener myListViewClicked = new AdapterView.OnItemClickListener() {
+//
 //            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                // Create new intent to go to {@link EditorActivity}
-//                Intent intent = new Intent(NetworkItemsActivity.this, EditorActivity.class);
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(NetworkItemsActivity.this, "Clicked at positon = " + position, Toast.LENGTH_SHORT).show();
 //
-//                // Form the content URI that represents the specific pet that was clicked on,
-//                // by appending the "id" (passed as input to this method) onto the
-//                // {@link TestCaseEntry#CONTENT_URI}.
-//                // For example, the URI would be "content://com.example.android.pets/pets/2"
-//                // if the pet with ID 2 was clicked on.
-//                Uri currentTestUri = ContentUris.withAppendedId(TestCaseEntry.CONTENT_URI, id);
+//            }
+//        };
+
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 //
-//                // Set the URI on the data field of the intent
-//                intent.setData(currentTestUri);
+//            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+//                                           int index, long arg3) {
+//                // TODO Auto-generated method stub
+//                Log.d(TAG, "onItemLongClick:======================================================= ");
+//                String str=listView.getItemAtPosition(index).toString();
+//                Log.d(TAG, "onItemLongClick: "+str);
 //
-//                // Launch the {@link EditorActivity} to display the data for the current pet.
-//                startActivity(intent);
+//                return true;
 //            }
 //        });
+
+        // Setup the item click listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Create new intent to go to {@link EditorActivity}
+                Intent intent = new Intent(NetworkItemsActivity.this, EditorActivity.class);
+
+                // Form the content URI that represents the specific pet that was clicked on,
+                // by appending the "id" (passed as input to this method) onto the
+                // {@link TestCaseEntry#CONTENT_URI}.
+                // For example, the URI would be "content://com.example.android.pets/pets/2"
+                // if the pet with ID 2 was clicked on.
+                Uri currentTestUri = ContentUris.withAppendedId(TestCaseEntry.CONTENT_URI, id);
+
+                // Set the URI on the data field of the intent
+                intent.setData(currentTestUri);
+                Log.d(TAG, "onItemClick: ================================================>" + position);
+
+                // Launch the {@link EditorActivity} to display the data for the current pet.
+                startActivity(intent);
+
+            }
+        });
 
         // Kick off the loader
         getLoaderManager().initLoader(TEST_LOADER, null, this);
 
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} inetAddress the list.
-//        listView.setAdapter(caseAdapter);
     }
 
     /**
@@ -135,6 +140,7 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
         values.put(TestCaseEntry.COLUMN_TEST_PARA1,"AudioVolume");
         values.put(TestCaseEntry.COLUMN_TEST_PARA2, "0.8");
         values.put(TestCaseEntry.COLUMN_TEST_PARA3, " ");
+        values.put(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE,"200");
         Log.d(TAG, "insertTest: database from insert menue item");
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link TestCaseEntry#CONTENT_URI} to indicate that we want to insert
@@ -160,9 +166,7 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
 
         int id = item.getItemId();
         if (id == R.id.menu_reset_item) {
-
-            int itemsCount = listView.getChildCount();
-            for (int i = 0; i < itemsCount; i++) {
+            for (int i = 0; i < listView.getChildCount(); i++) {
                 View view = listView.getChildAt(i);
                 TextView txt = (TextView) view.findViewById(R.id.test_result);
                 txt.setText("");
@@ -170,8 +174,10 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
             return true;
         }
         if (id == R.id.menu_testAll_item) {
-            for (int i = 0; i < testCases.size(); i++) {
-                caseAdapter.run(testCases.get(i));
+            for (int i = 0; i < listView.getChildCount(); i++) {
+                View view=listView.getChildAt(i);
+                CustomLinearLayout custom=(CustomLinearLayout)view.findViewById(R.id.item_container);
+                custom.run(custom.getTestCase());
             }
             return true;
         }
@@ -199,7 +205,8 @@ public class NetworkItemsActivity extends AppCompatActivity implements  LoaderMa
                 TestCaseEntry.COLUMN_TEST_NAME,
                 TestCaseEntry.COLUMN_TEST_CONTROLLER,
                 TestCaseEntry.COLUMN_TEST_PARA1,
-                TestCaseEntry.COLUMN_TEST_PARA2
+                TestCaseEntry.COLUMN_TEST_PARA2,
+                TestCaseEntry.COLUMN_TEST_EXPECTED_CODE
         };
 
         // This loader will execute the ContentProvider's query method on a background thread

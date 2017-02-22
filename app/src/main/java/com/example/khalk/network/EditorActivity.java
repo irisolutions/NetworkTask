@@ -52,7 +52,10 @@ public class EditorActivity extends AppCompatActivity implements
     /** EditText field to enter the test's para3 */
     private EditText mPara3EditText;
 
-   
+    /** EditText field to enter the test's expected code */
+    private EditText mExpectedCodeEditText;
+
+
     /** Boolean flag that keeps track of whether the test has been edited (true) or not (false) */
     private boolean mTestHasChanged = false;
 
@@ -103,6 +106,7 @@ public class EditorActivity extends AppCompatActivity implements
         mPara1EditText=(EditText)findViewById(R.id.edit_para1_name);
         mPara2EditText=(EditText)findViewById(R.id.edit_para2_name);
         mPara3EditText=(EditText)findViewById(R.id.edit_para3_name);
+        mExpectedCodeEditText=(EditText)findViewById(R.id.edit_expected_code);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -112,6 +116,7 @@ public class EditorActivity extends AppCompatActivity implements
         mPara1EditText.setOnTouchListener(mTouchListener);
         mPara2EditText.setOnTouchListener(mTouchListener);
         mPara3EditText.setOnTouchListener(mTouchListener);
+        mExpectedCodeEditText.setOnTouchListener(mTouchListener);
     }
 
 
@@ -126,12 +131,14 @@ public class EditorActivity extends AppCompatActivity implements
         String para1String = mPara1EditText.getText().toString().trim();
         String para2String = mPara2EditText.getText().toString().trim();
         String para3String = mPara3EditText.getText().toString().trim();
+        String expectedCodeString = mExpectedCodeEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new test
         // and check if all the fields in the editor are blank
         if (mCurrentTestUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(controllerString) &&
-                TextUtils.isEmpty(para1String) && TextUtils.isEmpty(para2String )&& TextUtils.isEmpty(para2String )) {
+                TextUtils.isEmpty(para1String) && TextUtils.isEmpty(para2String )&& TextUtils.isEmpty(para3String )
+                && TextUtils.isEmpty(expectedCodeString )) {
             // Since no fields were modified, we can return early without creating a new test.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -145,6 +152,7 @@ public class EditorActivity extends AppCompatActivity implements
         values.put(TestCaseEntry.COLUMN_TEST_PARA1, para1String);
         values.put(TestCaseEntry.COLUMN_TEST_PARA2,para2String);
         values.put(TestCaseEntry.COLUMN_TEST_PARA3,para3String);
+        values.put(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE,expectedCodeString);
 
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.

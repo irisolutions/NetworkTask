@@ -103,6 +103,12 @@ public final class TestCaseContract {
          * Type: TEXT
          */
         public final static String COLUMN_TEST_PARA3 = "para3";
+        /**
+         * expected code for the test case
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_TEST_EXPECTED_CODE = "expected_code";
         
     }
 

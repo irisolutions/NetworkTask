@@ -71,6 +71,7 @@ public class TestCursorAdapter extends CursorAdapter {
         int para1ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA1);
         int para2ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA2);
         int para3ColumnIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_PARA3);
+        int expectedTestCodeIndex=cursor.getColumnIndex(TestCaseEntry.COLUMN_TEST_EXPECTED_CODE);
 ////
         // Read the testButton attributes from the Cursor for the current testButton
         String testName = cursor.getString(nameColumnIndex);
@@ -78,6 +79,7 @@ public class TestCursorAdapter extends CursorAdapter {
         String testPara1=cursor.getString(para1ColumnIndex);
         String testPara2=cursor.getString(para2ColumnIndex);
 //        String testPara3=cursor.getString(para3ColumnIndex);
+        String expectedTestCode=cursor.getString(expectedTestCodeIndex);
 
         String testURL=testController+"/"+testPara1+"/"+testPara2;
 
@@ -86,7 +88,7 @@ public class TestCursorAdapter extends CursorAdapter {
 //       caseNameTextView.setText(testURL);
 //        testCase=new TestCase("SensoryBoxAPK/AudioVolume/0.8", "200", "192.168.1.2", "8888");
         CustomLinearLayout customLinearLayout = (CustomLinearLayout)view;
-        customLinearLayout.setTestCase(new TestCase(testURL,"200",prefIP,prefPort));
+        customLinearLayout.setTestCase(new TestCase(testURL,expectedTestCode,prefIP,prefPort));
     }
 
 }

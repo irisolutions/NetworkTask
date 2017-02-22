@@ -1,6 +1,5 @@
 package com.example.khalk.network;
 
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ public class TestCase {
     public String port;
     public ProgressBar loadingIndicator;
     public TextView resultTextView;
-    public View parent;
     public OkHttpClient client;
     public String finalUrl;
 
@@ -95,9 +93,7 @@ public class TestCase {
         return resultTextView;
     }
 
-    public void setParent(View view) {
-        this.parent = view;
-    }
+
 
 }
 
