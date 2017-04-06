@@ -2,6 +2,8 @@ package com.example.khalk.network.data;
 
 /**
  * Created by khalk on 2/21/2017.
+ * assumbtions:
+ * desc:
  */
 
 import android.content.Context;
@@ -13,9 +15,9 @@ import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
 /**
  * Database helper for Tests app. Manages database creation and version management.
  */
-public class TestCaseDbHelper extends SQLiteOpenHelper {
+ class TestCaseDbHelper extends SQLiteOpenHelper {
 
-    public static final String LOG_TAG = TestCaseDbHelper.class.getSimpleName();
+//    public static final String LOG_TAG = TestCaseDbHelper.class.getSimpleName();
 
     /**
      * Name of the database file
@@ -32,7 +34,7 @@ public class TestCaseDbHelper extends SQLiteOpenHelper {
      *
      * @param context of the app
      */
-    public TestCaseDbHelper(Context context) {
+    TestCaseDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

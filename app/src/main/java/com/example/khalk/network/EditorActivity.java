@@ -2,6 +2,8 @@ package com.example.khalk.network;
 
 /**
  * Created by khalk on 2/21/2017.
+ * assumbtions:
+ * desc:
  */
 
 import android.app.AlertDialog;
@@ -27,7 +29,7 @@ import android.widget.Toast;
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
 
 /**
- * Allows user to create a new test or edit an existing one.
+ * Allows user to create caseUIHandler new test or edit an existing one.
  */
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -38,7 +40,7 @@ public class EditorActivity extends AppCompatActivity implements
     private static final int EXISTING_TEST_LOADER = 0;
 
     /**
-     * Content URI for the existing test (null if it's a new test)
+     * Content URI for the existing test (null if it's caseUIHandler new test)
      */
     private Uri mCurrentTestUri;
 
@@ -79,7 +81,7 @@ public class EditorActivity extends AppCompatActivity implements
     private boolean mTestHasChanged = false;
 
     /**
-     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
+     * OnTouchListener that listens for any user touches on caseUIHandler View, implying that they are modifying
      * the view, and we change the mTestHasChanged boolean to true.
      */
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -96,25 +98,25 @@ public class EditorActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_editor);
 
         // Examine the intent that was used to launch this activity,
-        // in order to figure out if we're creating a new test or editing an existing one.
+        // in order to figure out if we're creating caseUIHandler new test or editing an existing one.
         Intent intent = getIntent();
         // TODO: 2/21/2017 get intenet from prev activity
         mCurrentTestUri = intent.getData();
 
-        // If the intent DOES NOT contain a test content URI, then we know that we are
-        // creating a new test.
+        // If the intent DOES NOT contain caseUIHandler test content URI, then we know that we are
+        // creating caseUIHandler new test.
         if (mCurrentTestUri == null) {
-            // This is a new test, so change the app bar to say "Add a Test"
+            // This is caseUIHandler new test, so change the app bar to say "Add caseUIHandler Test"
             setTitle(getString(R.string.editor_activity_title_new_test));
 
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
-            // (It doesn't make sense to delete a test that hasn't been created yet.)
+            // (It doesn't make sense to delete caseUIHandler test that hasn't been created yet.)
             invalidateOptionsMenu();
         } else {
             // Otherwise this is an existing test, so change app bar to say "Edit Test"
             setTitle(getString(R.string.editor_activity_title_edit_test));
 
-            // Initialize a loader to read the test data from the database
+            // Initialize caseUIHandler loader to read the test data from the database
             // and display the current values in the editor
             getLoaderManager().initLoader(EXISTING_TEST_LOADER, null, this);
         }
@@ -152,18 +154,18 @@ public class EditorActivity extends AppCompatActivity implements
         String para3String = mPara3EditText.getText().toString().trim();
         String expectedCodeString = mExpectedCodeEditText.getText().toString().trim();
 
-        // Check if this is supposed to be a new test
+        // Check if this is supposed to be caseUIHandler new test
         // and check if all the fields in the editor are blank
         if (mCurrentTestUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(controllerString) &&
                 TextUtils.isEmpty(para1String) && TextUtils.isEmpty(para2String) && TextUtils.isEmpty(para3String)
                 && TextUtils.isEmpty(expectedCodeString)) {
-            // Since no fields were modified, we can return early without creating a new test.
+            // Since no fields were modified, we can return early without creating caseUIHandler new test.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
         }
 
-        // Create a ContentValues object where column names are the keys,
+        // Create caseUIHandler ContentValues object where column names are the keys,
         // and test attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(TestCaseEntry.COLUMN_TEST_NAME, nameString);
@@ -176,19 +178,19 @@ public class EditorActivity extends AppCompatActivity implements
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
 
-        // Determine if this is a new or existing test by checking if mCurrentTestUri is null or not
+        // Determine if this is caseUIHandler new or existing test by checking if mCurrentTestUri is null or not
         if (mCurrentTestUri == null) {
-            // This is a NEW test, so insert a new test into the provider,
+            // This is caseUIHandler NEW test, so insert caseUIHandler new test into the provider,
             // returning the content URI for the new test.
             Uri newUri = getContentResolver().insert(TestCaseEntry.CONTENT_URI, values);
 
-            // Show a toast message depending on whether or not the insertion was successful.
+            // Show caseUIHandler toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
                 // If the new content URI is null, then there was an error with insertion.
                 Toast.makeText(this, getString(R.string.editor_insert_test_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the insertion was successful and we can display a toast.
+                // Otherwise, the insertion was successful and we can display caseUIHandler toast.
                 Toast.makeText(this, getString(R.string.editor_insert_test_successful),
                         Toast.LENGTH_SHORT).show();
             }
@@ -199,13 +201,13 @@ public class EditorActivity extends AppCompatActivity implements
             // we want to modify.
             int rowsAffected = getContentResolver().update(mCurrentTestUri, values, null, null);
 
-            // Show a toast message depending on whether or not the update was successful.
+            // Show caseUIHandler toast message depending on whether or not the update was successful.
             if (rowsAffected == 0) {
                 // If no rows were affected, then there was an error with the update.
                 Toast.makeText(this, getString(R.string.editor_update_test_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the update was successful and we can display a toast.
+                // Otherwise, the update was successful and we can display caseUIHandler toast.
                 Toast.makeText(this, getString(R.string.editor_update_test_successful),
                         Toast.LENGTH_SHORT).show();
             }
@@ -227,7 +229,7 @@ public class EditorActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new test, hide the "Delete" menu item.
+        // If this is caseUIHandler new test, hide the "Delete" menu item.
         if (mCurrentTestUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
@@ -237,21 +239,21 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
+        // User clicked on caseUIHandler menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            // Respond to a click on the "Save" menu option
+            // Respond to caseUIHandler click on the "Save" menu option
             case R.id.action_save:
                 // Save test to database
                 saveTest();
                 // Exit activity
                 finish();
                 return true;
-            // Respond to a click on the "Delete" menu option
+            // Respond to caseUIHandler click on the "Delete" menu option
             case R.id.action_delete:
                 // Pop up confirmation dialog for deletion
                 showDeleteConfirmationDialog();
                 return true;
-            // Respond to a click on the "Up" arrow button in the app bar
+            // Respond to caseUIHandler click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // If the test hasn't changed, continue with navigating up to parent activity
                 // which is the {@link CatalogActivity}.
@@ -260,8 +262,8 @@ public class EditorActivity extends AppCompatActivity implements
                     return true;
                 }
 
-                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-                // Create a click listener to handle the user confirming that
+                // Otherwise if there are unsaved changes, setup caseUIHandler dialog to warn the user.
+                // Create caseUIHandler click listener to handle the user confirming that
                 // changes should be discarded.
                 DialogInterface.OnClickListener discardButtonClickListener =
                         new DialogInterface.OnClickListener() {
@@ -272,7 +274,7 @@ public class EditorActivity extends AppCompatActivity implements
                             }
                         };
 
-                // Show a dialog that notifies the user they have unsaved changes
+                // Show caseUIHandler dialog that notifies the user they have unsaved changes
                 showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
@@ -290,8 +292,8 @@ public class EditorActivity extends AppCompatActivity implements
             return;
         }
 
-        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
+        // Otherwise if there are unsaved changes, setup caseUIHandler dialog to warn the user.
+        // Create caseUIHandler click listener to handle the user confirming that changes should be discarded.
         DialogInterface.OnClickListener discardButtonClickListener =
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -307,7 +309,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Since the editor shows all test attributes, define a projection that contains
+        // Since the editor shows all test attributes, define caseUIHandler projection that contains
         // all columns from the test table
         String[] projection = {
                 TestCaseEntry._ID,
@@ -319,7 +321,7 @@ public class EditorActivity extends AppCompatActivity implements
                 TestCaseEntry.COLUMN_TEST_EXPECTED_CODE
         };
 
-        // This loader will execute the ContentProvider's query method on a background thread
+        // This loader will execute the ContentProvider's query method on caseUIHandler background thread
         return new CursorLoader(this,   // Parent activity context
                 mCurrentTestUri,         // Query the content URI for the current test
                 projection,             // Columns to include in the resulting Cursor
@@ -378,7 +380,7 @@ public class EditorActivity extends AppCompatActivity implements
     }
 
     /**
-     * Show a dialog that warns the user there are unsaved changes that will be lost
+     * Show caseUIHandler dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
      *
      * @param discardButtonClickListener is the click listener for what to do when
@@ -446,13 +448,13 @@ public class EditorActivity extends AppCompatActivity implements
             // content URI already identifies the test that we want.
             int rowsDeleted = getContentResolver().delete(mCurrentTestUri, null, null);
 
-            // Show a toast message depending on whether or not the delete was successful.
+            // Show caseUIHandler toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with the delete.
                 Toast.makeText(this, getString(R.string.editor_delete_test_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the delete was successful and we can display a toast.
+                // Otherwise, the delete was successful and we can display caseUIHandler toast.
                 Toast.makeText(this, getString(R.string.editor_delete_test_successful),
                         Toast.LENGTH_SHORT).show();
             }

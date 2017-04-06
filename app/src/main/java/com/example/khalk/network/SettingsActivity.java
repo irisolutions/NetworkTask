@@ -2,6 +2,8 @@ package com.example.khalk.network;
 
 /**
  * Created by khalk on 2/21/2017.
+ * assumbtions:
+ * desc:
  */
 
 import android.content.SharedPreferences;
@@ -31,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference portNetwork = findPreference(getString(R.string.settings_port));
             bindPreferenceSummaryToValue(portNetwork);
+
         }
 
         @Override

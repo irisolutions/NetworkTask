@@ -2,6 +2,8 @@ package com.example.khalk.network.data;
 
 /**
  * Created by khalk on 2/21/2017.
+ * assumbtions:
+ * desc:
  */
 
 import android.content.ContentProvider;
@@ -11,6 +13,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.khalk.network.data.TestCaseContract.TestCaseEntry;
@@ -76,7 +79,7 @@ public class TestCaseProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         // Get readable database
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
@@ -257,7 +260,7 @@ public class TestCaseProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case TESTS:
