@@ -8,11 +8,21 @@
         android:id="@+id/menu_reset_item"
         android:orderInCategory="1"
         android:title="@string/reset"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_testAll_item"
         android:orderInCategory="1"
         android:title="@string/testAll"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/settings_menu_item"
+        android:orderInCategory="1"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_insert_item"
+        android:title="@string/insert_menu_item"
+        android:orderInCategory="1"
+        app:showAsAction="never" />
 
 </menu>
